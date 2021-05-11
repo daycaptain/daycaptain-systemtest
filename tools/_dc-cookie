@@ -1,0 +1,27 @@
+#!/bin/bash
+set -eo pipefail
+
+# Emits the locally-stored authentication cookie
+# Usage: $> _dc-cookie [env]
+#   with env: test, local
+
+
+# example env file that contains at least the following lines:
+# $> cat /etc/environment.local
+# DC_COOKIE='<...>'
+# DC_COOKIE_LOCAL='<...>'
+# DC_COOKIE_TEST='<...>'
+
+# _ is the personal account on daycaptain.com
+# local is the personal account on localhost
+# test is a test account used in system tests, e.g. info@daycaptain.com on localhost
+
+source /etc/environment.local
+
+if [[ "$1" == "local" ]]; then
+  echo -n $DC_COOKIE_LOCAL
+elif [[ "$1" == "test" ]]; then
+  echo -n $DC_COOKIE_TEST
+else
+  echo -n $DC_COOKIE
+fi
