@@ -3,3 +3,5 @@
 Systemtests for https://daycaptain.com[DayCaptain^]
 
 Serve as examples for system &amp; UI tests for more complex programs.
+
+Use JUnit, AssertJ, and Selenide.
