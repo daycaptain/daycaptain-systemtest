@@ -56,7 +56,7 @@ public class BacklogsView extends DynamicView {
 
     public void selectBacklog(String backlogName) {
         press("hgg");
-        while (!getFocusedElement().$("name").text().equals(backlogName))
+        while (!$(getFocusedElement()).$("name").text().equals(backlogName))
             press("j");
         waitForLoading();
     }

@@ -18,8 +18,9 @@ public abstract class DynamicView extends View {
         waitFor(20);
         SelenideElement infoArea = $("info-area");
         Condition loading = cssClass("loading");
-        if (!infoArea.has(loading))
+        if (!infoArea.has(loading)) {
             waitFor(500);
+        }
         infoArea.shouldNotHave(loading, ofSeconds(8));
     }
 

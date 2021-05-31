@@ -9,6 +9,7 @@ import com.daycaptain.systemtest.frontend.actions.EditInformationAction;
 import com.daycaptain.systemtest.frontend.actions.EditTimeEventAction;
 import com.daycaptain.systemtest.frontend.elements.DayTimeEventList;
 import com.daycaptain.systemtest.frontend.entity.ListItem;
+import com.daycaptain.systemtest.frontend.views.WeekView;
 import org.junit.jupiter.api.*;
 import org.threeten.extra.YearWeek;
 
@@ -75,7 +76,9 @@ public class CreateDayTimeEventUITest {
     @BeforeEach
     void beforeEach() {
         system.deleteDayTimeEvents(date);
-        events = dayCaptain.week(week).dayTimeEvents(dayOfWeek);
+        WeekView week = dayCaptain.week(CreateDayTimeEventUITest.week);
+        events = week.dayTimeEvents(dayOfWeek);
+        assertThat(week.selectedDay()).contains("16th Feb");
     }
 
     @BeforeAll

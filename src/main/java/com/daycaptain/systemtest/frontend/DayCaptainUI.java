@@ -4,7 +4,10 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import com.daycaptain.systemtest.backend.CookieAuthentication;
-import com.daycaptain.systemtest.frontend.views.*;
+import com.daycaptain.systemtest.frontend.views.AccountView;
+import com.daycaptain.systemtest.frontend.views.BacklogsView;
+import com.daycaptain.systemtest.frontend.views.DayView;
+import com.daycaptain.systemtest.frontend.views.WeekView;
 import org.openqa.selenium.Cookie;
 import org.threeten.extra.YearWeek;
 

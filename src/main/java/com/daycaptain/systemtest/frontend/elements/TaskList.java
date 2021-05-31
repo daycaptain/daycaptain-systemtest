@@ -79,7 +79,7 @@ public class TaskList extends ListElement {
     }
 
     public List<String> getNames() {
-        return $$(cssSelector + " dp-task").texts();
+        return $$(cssSelector + " dp-task name").texts();
     }
 
     public Task focused() {

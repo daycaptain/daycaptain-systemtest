@@ -46,6 +46,10 @@ public class WeekView extends DynamicView {
         return new TaskList(".week-grid > div:nth-of-type(" + index + ") day-tasks");
     }
 
+    public String selectedDay() {
+        return $(".week-grid div.selected > header").text();
+    }
+
     public void assignDayTaskFromWeekTask(int weekTaskIndex, String dayTaskName, DayOfWeek dayOfWeek) {
         weekTasks().select(weekTaskIndex);
         press("nti");
