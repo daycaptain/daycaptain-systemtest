@@ -680,6 +680,15 @@ public class DayCaptainSystem {
                 .forEach(this::deleteProject);
     }
 
+    public Detection detect(String string) {
+        JsonObject entity = Json.createObjectBuilder()
+                .add("string", string)
+                .build();
+        Response response = requestCreate(entity, "detections");
+        verifySuccess(response);
+        return response.readEntity(Detection.class);
+    }
+
     private URI requestCreateVerify(JsonObject taskEntity, String... paths) {
         Response response = requestCreate(taskEntity, paths);
         verifySuccess(response);
