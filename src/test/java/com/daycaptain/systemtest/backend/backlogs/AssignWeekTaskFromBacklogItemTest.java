@@ -1,10 +1,8 @@
 package com.daycaptain.systemtest.backend.backlogs;
 
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
-import com.daycaptain.systemtest.backend.entity.Backlog;
-import com.daycaptain.systemtest.backend.entity.BacklogItem;
-import com.daycaptain.systemtest.backend.entity.DayTimeEvent;
-import com.daycaptain.systemtest.backend.entity.Task;
+import com.daycaptain.systemtest.backend.entity.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.threeten.extra.YearWeek;
 
@@ -12,6 +10,7 @@ import java.net.URI;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -135,13 +134,23 @@ public class AssignWeekTaskFromBacklogItemTest {
         taskId = dayCaptain.createDayTask("New day task", date, weekTask);
         Task dayTask = dayCaptain.getTask(taskId);
         URI eventId = dayCaptain.createDayTimeEvent("New time event", date.atTime(LocalTime.NOON), date.atTime(LocalTime.NOON.plusHours(1)), dayTask);
-        DayTimeEvent event = dayCaptain.getDayTimeEvent(eventId);
 
-        assertThat(event.assignedFromTask).isEqualTo(dayTask._self);
-        assertThat(event.area).isNull();
-        assertThat(event.relatedArea).isEqualTo("IT work");
-        assertThat(event.project).isNull();
-        assertThat(event.relatedProject).isNull();
+        Consumer<DayTimeEvent> assertions = ev -> {
+            assertThat(ev.assignedFromTask).isEqualTo(dayTask._self);
+            assertThat(ev.area).isNull();
+            assertThat(ev.relatedArea).isEqualTo("IT work");
+            assertThat(ev.project).isNull();
+            assertThat(ev.relatedProject).isNull();
+        };
+
+        DayTimeEvent event = dayCaptain.getDayTimeEvent(eventId);
+        assertions.accept(event);
+
+        Day day = dayCaptain.getDay(date);
+        assertions.accept(day.timeEvents.get(0));
+
+        day = dayCaptain.getWeek(WEEK).days.get(date);
+        assertions.accept(day.timeEvents.get(0));
     }
 
     @Test
@@ -212,6 +221,16 @@ public class AssignWeekTaskFromBacklogItemTest {
         assertThat(event.relatedArea).isEqualTo("Business");
         assertThat(event.project).isNull();
         assertThat(event.relatedProject).isEqualTo("Business idea");
+    }
+
+    @AfterEach
+    void tearDown() {
+        dayCaptain.deleteWeekTasks(WEEK);
+        LocalDate date = WEEK.atDay(DayOfWeek.MONDAY);
+        dayCaptain.deleteDayTimeEvents(date);
+        dayCaptain.deleteDayTasks(date);
+        dayCaptain.deleteBacklogs("New backlog");
+        dayCaptain.deleteBacklogItemsInAllBacklogs("New backlog item");
     }
 
 }

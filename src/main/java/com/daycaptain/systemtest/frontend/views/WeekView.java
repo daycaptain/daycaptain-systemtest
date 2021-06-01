@@ -65,7 +65,25 @@ public class WeekView extends DynamicView {
             press("l");
 
         press(Keys.ENTER);
+        waitForLoading();
+    }
 
+    public void assignDayTaskFromWeekTask(int weekTaskIndex, String dayTaskName, int temporalOffset) {
+        weekTasks().select(weekTaskIndex);
+        press("nti");
+
+        for (int i = 0; i < 6; i++)
+            ctrlPress(Keys.BACK_SPACE);
+        press(dayTaskName);
+
+        press(Keys.ESCAPE + "s");
+
+
+        String key = temporalOffset < 0 ? "h" : "l";
+        for (int i = 0; i < Math.abs(temporalOffset); i++)
+            press(key);
+
+        press(Keys.ENTER);
         waitForLoading();
     }
 

@@ -1,8 +1,8 @@
 package com.daycaptain.systemtest.frontend.views;
 
 import com.daycaptain.systemtest.frontend.elements.DayEventList;
-import com.daycaptain.systemtest.frontend.elements.TaskList;
 import com.daycaptain.systemtest.frontend.elements.DayTimeEventList;
+import com.daycaptain.systemtest.frontend.elements.TaskList;
 import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.CollectionCondition.anyMatch;
@@ -74,4 +74,28 @@ public class DayView extends DynamicView {
         shiftPress(Keys.ESCAPE);
         waitForLoading();
     }
+
+    public void assignTimeEventFromDayTask(int taskIndex, String timeEventName, String startTime, String endTime) {
+        tasks().select(taskIndex);
+        press("nri");
+
+        for (int i = 0; i < 6; i++)
+            ctrlPress(Keys.BACK_SPACE);
+        press(timeEventName);
+
+        press(Keys.ESCAPE + "e");
+        for (int i = 0; i < 5; i++)
+            press(Keys.BACK_SPACE);
+        press(startTime);
+
+        press(Keys.ESCAPE + "de");
+        for (int i = 0; i < 5; i++)
+            press(Keys.BACK_SPACE);
+        press(endTime);
+        press(Keys.ESCAPE);
+        press(Keys.ENTER);
+
+        waitForLoading();
+    }
+
 }
