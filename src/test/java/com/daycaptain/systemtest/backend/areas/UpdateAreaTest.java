@@ -16,8 +16,7 @@ public class UpdateAreaTest {
 
     @AfterEach
     void tearDown() {
-        dayCaptain.deleteAreas("New area");
-        dayCaptain.deleteAreas("Another area");
+        dayCaptain.deleteAreas("New area", "Another area");
     }
 
     @Test

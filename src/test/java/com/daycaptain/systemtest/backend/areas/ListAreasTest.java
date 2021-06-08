@@ -2,6 +2,8 @@ package com.daycaptain.systemtest.backend.areas;
 
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.backend.entity.Area;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -86,6 +88,18 @@ public class ListAreasTest {
         dayCaptain.deleteAreas("Area");
         areas = dayCaptain.getAreas();
         dayCaptain.updateArea(areas.get(0), "order", 1);
+    }
+
+    @BeforeEach
+    void setUp() {
+        dayCaptain.deleteAreas("Old work");
+    }
+
+    @AfterEach
+    void tearDown() {
+        dayCaptain.deleteAreas("Area");
+        URI area = dayCaptain.createArea("Old work");
+        dayCaptain.updateArea(dayCaptain.getArea(area), "archived", true);
     }
 
 }

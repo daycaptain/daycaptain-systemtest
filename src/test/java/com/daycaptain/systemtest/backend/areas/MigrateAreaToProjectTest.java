@@ -103,7 +103,7 @@ public class MigrateAreaToProjectTest {
     @AfterEach
     void tearDown() {
         dayCaptain.deleteProjects("Test area", "Test project");
-        dayCaptain.deleteAreas("Test area");
+        dayCaptain.deleteAreas("Test area", "Test project");
         dayCaptain.deleteBacklogItemsInAllBacklogs("Backlog item");
     }
 

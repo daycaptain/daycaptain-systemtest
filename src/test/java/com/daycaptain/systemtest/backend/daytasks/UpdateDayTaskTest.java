@@ -269,4 +269,48 @@ public class UpdateDayTaskTest {
         assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
     }
 
+    @Test
+    void testSetProjectRemovesArea() {
+        URI taskId = dayCaptain.createDayTaskWithArea("New task", DATE, "IT work");
+
+        Task task = findTask(dayCaptain.getDay(DATE).tasks, taskId);
+        assertThat(task.area).isEqualTo("IT work");
+        assertThat(task.relatedArea).isEqualTo("IT work");
+
+        dayCaptain.updateTask(task, "project", "Business idea");
+        task = findTask(dayCaptain.getDay(DATE).tasks, taskId);
+        assertThat(task.string).isEqualTo("New task");
+        assertThat(task.area).isNull();
+        assertThat(task.relatedArea).isEqualTo("Business");
+        assertThat(task.project).isEqualTo("Business idea");
+        assertThat(task.relatedProject).isEqualTo("Business idea");
+    }
+
+    @Test
+    void testSetAreaRemovesProject() {
+        URI taskId = dayCaptain.createDayTaskWithProject("New task", DATE, 0, "Business idea");
+
+        Task task = findTask(dayCaptain.getDay(DATE).tasks, taskId);
+        assertThat(task.area).isNull();
+        assertThat(task.relatedArea).isEqualTo("Business");
+        assertThat(task.project).isEqualTo("Business idea");
+        assertThat(task.relatedProject).isEqualTo("Business idea");
+
+        dayCaptain.updateTask(task, "area", "IT work");
+        task = findTask(dayCaptain.getDay(DATE).tasks, taskId);
+        assertThat(task.string).isEqualTo("New task");
+        assertThat(task.area).isEqualTo("IT work");
+        assertThat(task.relatedArea).isEqualTo("IT work");
+        assertThat(task.project).isNull();
+        assertThat(task.relatedProject).isNull();
+    }
+
+    @Test
+    void testCannotSetBothAreaAndProject() {
+        URI taskId = dayCaptain.createDayTask("New task", DATE);
+        Task task = findTask(dayCaptain.getDay(DATE).tasks, taskId);
+        AssertionError error = Assertions.assertThrows(AssertionError.class, () -> dayCaptain.updateTask(task, "area", "IT work", "project", "Business idea"));
+        assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
+    }
+
 }

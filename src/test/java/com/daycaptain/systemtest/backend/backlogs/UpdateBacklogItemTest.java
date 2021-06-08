@@ -4,6 +4,7 @@ import com.daycaptain.systemtest.backend.CollectionUtils;
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.backend.entity.Backlog;
 import com.daycaptain.systemtest.backend.entity.BacklogItem;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UpdateBacklogItemTest {
 
     private final DayCaptainSystem dayCaptain = new DayCaptainSystem();
+
+    @AfterEach
+    void tearDown() {
+        dayCaptain.deleteBacklogItemsInAllBacklogs("New backlog item", "Very new backlog item");
+    }
 
     @Test
     void testUpdateName() {
@@ -174,6 +180,51 @@ public class UpdateBacklogItemTest {
         assertThat(item.archived).isFalse();
 
         AssertionError error = Assertions.assertThrows(AssertionError.class, () -> dayCaptain.updateBacklogItem(item, "archived", true));
+        assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
+    }
+
+    @Test
+    void testSetProjectRemovesArea() {
+        URI itemId = dayCaptain.createInboxItemWithArea("New backlog item", "IT work");
+
+        BacklogItem item = dayCaptain.getBacklogItem(itemId);
+        assertThat(item.area).isEqualTo("IT work");
+        assertThat(item.relatedArea).isEqualTo("IT work");
+
+        dayCaptain.updateBacklogItem(item, "project", "Business idea");
+        item = dayCaptain.getBacklogItem(itemId);
+        assertThat(item.string).isEqualTo("New backlog item");
+        assertThat(item.area).isNull();
+        assertThat(item.relatedArea).isEqualTo("Business");
+        assertThat(item.project).isEqualTo("Business idea");
+        assertThat(item.relatedProject).isEqualTo("Business idea");
+    }
+
+    @Test
+    void testSetAreaRemovesProject() {
+        URI itemId = dayCaptain.createInboxItemWithProject("New backlog item", "Business idea");
+
+        BacklogItem item = dayCaptain.getBacklogItem(itemId);
+        assertThat(item.area).isNull();
+        assertThat(item.relatedArea).isEqualTo("Business");
+        assertThat(item.project).isEqualTo("Business idea");
+        assertThat(item.relatedProject).isEqualTo("Business idea");
+
+        dayCaptain.updateBacklogItem(item, "area", "IT work");
+        item = dayCaptain.getBacklogItem(itemId);
+        assertThat(item.string).isEqualTo("New backlog item");
+        assertThat(item.area).isEqualTo("IT work");
+        assertThat(item.relatedArea).isEqualTo("IT work");
+        assertThat(item.project).isNull();
+        assertThat(item.relatedProject).isNull();
+    }
+
+    @Test
+    void testCannotSetBothAreaAndProject() {
+        URI itemId = dayCaptain.createInboxItem("New backlog item");
+
+        BacklogItem item = dayCaptain.getBacklogItem(itemId);
+        AssertionError error = Assertions.assertThrows(AssertionError.class, () -> dayCaptain.updateBacklogItem(item, "area", "IT work", "project", "Business idea"));
         assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
     }
 

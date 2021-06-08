@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
+import static com.daycaptain.systemtest.Times.time;
+import static com.daycaptain.systemtest.backend.CollectionUtils.findDayTimeEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdateDayTimeEventTest {
@@ -123,6 +125,50 @@ public class UpdateDayTimeEventTest {
         DayTimeEvent loaded = CollectionUtils.findDayTimeEvent(dayCaptain.getDay(date).timeEvents, eventId);
         assertThat(loaded.string).isEqualTo("New event");
         assertThat(ZonedDateTime.parse(loaded.end).toLocalDateTime()).isEqualTo(end.toString());
+    }
+
+    @Test
+    void testSetProjectRemovesArea() {
+        URI eventId = dayCaptain.createDayTimeEventWithArea("New event", time(DATE, 10), time(DATE, 11), "IT work");
+
+        DayTimeEvent event = findDayTimeEvent(dayCaptain.getDay(DATE).timeEvents, eventId);
+        assertThat(event.area).isEqualTo("IT work");
+        assertThat(event.relatedArea).isEqualTo("IT work");
+
+        dayCaptain.updateDayTimeEvent(event, "project", "Business idea");
+        event = findDayTimeEvent(dayCaptain.getDay(DATE).timeEvents, eventId);
+        assertThat(event.string).isEqualTo("New event");
+        assertThat(event.area).isNull();
+        assertThat(event.relatedArea).isEqualTo("Business");
+        assertThat(event.project).isEqualTo("Business idea");
+        assertThat(event.relatedProject).isEqualTo("Business idea");
+    }
+
+    @Test
+    void testSetAreaRemovesProject() {
+        URI eventId = dayCaptain.createDayTimeEventWithProject("New event", time(DATE, 10), time(DATE, 11), "Business idea");
+
+        DayTimeEvent event = findDayTimeEvent(dayCaptain.getDay(DATE).timeEvents, eventId);
+        assertThat(event.string).isEqualTo("New event");
+        assertThat(event.area).isNull();
+        assertThat(event.relatedArea).isEqualTo("Business");
+        assertThat(event.project).isEqualTo("Business idea");
+        assertThat(event.relatedProject).isEqualTo("Business idea");
+
+        dayCaptain.updateDayTimeEvent(event, "area", "IT work");
+        event = findDayTimeEvent(dayCaptain.getDay(DATE).timeEvents, eventId);
+        assertThat(event.area).isEqualTo("IT work");
+        assertThat(event.relatedArea).isEqualTo("IT work");
+        assertThat(event.project).isNull();
+        assertThat(event.relatedProject).isNull();
+    }
+
+    @Test
+    void testCannotSetBothAreaAndProject() {
+        URI eventId = dayCaptain.createDayTimeEvent("New event", time(DATE, 10), time(DATE, 11));
+        DayTimeEvent event = findDayTimeEvent(dayCaptain.getDay(DATE).timeEvents, eventId);
+        AssertionError error = Assertions.assertThrows(AssertionError.class, () -> dayCaptain.updateDayTimeEvent(event, "area", "IT work", "project", "Business idea"));
+        assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
     }
 
 }

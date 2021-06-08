@@ -315,8 +315,8 @@ public class DayCaptainSystem {
         return requestCreateVerify(taskEntity, date.toString(), "tasks");
     }
 
-    public String updateTask(Task task, String property, Object value) {
-        JsonObject patch = patch(property, value);
+    public String updateTask(Task task, Object... values) {
+        JsonObject patch = patch(values);
 
         Response response = requestUpdate(task._self, patch);
         verifySuccess(response);
@@ -606,8 +606,8 @@ public class DayCaptainSystem {
         return requestCreateVerify(itemEntity, "backlog-items");
     }
 
-    public String updateBacklogItem(BacklogItem backlogItem, String property, Object value) {
-        JsonObject patch = patch(property, value);
+    public String updateBacklogItem(BacklogItem backlogItem, Object... values) {
+        JsonObject patch = patch(values);
         Response response = requestUpdate(backlogItem._self, patch);
         verifySuccess(response);
         return getActionId(response);

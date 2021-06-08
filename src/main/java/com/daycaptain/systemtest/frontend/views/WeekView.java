@@ -24,6 +24,14 @@ public class WeekView extends DynamicView {
         return new DayTimeEventList(".week-grid > div:nth-of-type(" + index + ") day-time-events");
     }
 
+    public DayTimeEventList dayTimeEventsOffset(int temporalOffset) {
+        press("gwr");
+        String key = temporalOffset < 0 ? "h" : "l";
+        for (int i = 0; i < Math.abs(temporalOffset); i++)
+            press(key);
+        return new DayTimeEventList(".week-grid > div.selected day-time-events");
+    }
+
     public TaskList weekTasks() {
         press("gw");
         return new TaskList("week-tasks");
@@ -44,6 +52,14 @@ public class WeekView extends DynamicView {
         press(keySequence);
         int index = dayOfWeek.ordinal() + 1;
         return new TaskList(".week-grid > div:nth-of-type(" + index + ") day-tasks");
+    }
+
+    public TaskList dayTasksOffset(int temporalOffset) {
+        press("gwt");
+        String key = temporalOffset < 0 ? "h" : "l";
+        for (int i = 0; i < Math.abs(temporalOffset); i++)
+            press(key);
+        return new TaskList(".week-grid > div.selected day-tasks");
     }
 
     public String selectedDay() {

@@ -8,8 +8,7 @@ import org.openqa.selenium.Keys;
 import static com.codeborne.selenide.CollectionCondition.anyMatch;
 import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Condition.focused;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 
 public class DayView extends DynamicView {
 
@@ -84,14 +83,10 @@ public class DayView extends DynamicView {
         press(timeEventName);
 
         press(Keys.ESCAPE + "e");
-        for (int i = 0; i < 5; i++)
-            press(Keys.BACK_SPACE);
-        press(startTime);
+        actions().pause(50).sendKeys(startTime).pause(50).perform();
 
         press(Keys.ESCAPE + "de");
-        for (int i = 0; i < 5; i++)
-            press(Keys.BACK_SPACE);
-        press(endTime);
+        actions().pause(50).sendKeys(endTime).pause(50).perform();
         press(Keys.ESCAPE);
         press(Keys.ENTER);
 

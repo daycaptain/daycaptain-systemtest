@@ -26,21 +26,21 @@ public class SearchUITest {
     @Test
     void day_view_search_jump_to_day_task() {
         SearchAction search = dayCaptain.day().search();
-        search.searchTerm("task");
-        assertThat(search.getResults()).containsExactly("Day task", "Week task");
+        search.searchTerm("taskk");
+        assertThat(search.getResults()).containsExactly("Dayy taskk", "Weekk taskk");
         search.gotoSelection();
         Task task = new DayView().focusedTaskList().focused();
-        assertThat(task.string).isEqualTo("Day task");
+        assertThat(task.string).isEqualTo("Dayy taskk");
     }
 
     @Test
     void day_view_search_jump_to_time_event() {
         SearchAction search = dayCaptain.day().search();
-        search.searchTerm("time");
-        assertThat(search.getResults()).containsExactly("Time event");
+        search.searchTerm("timee");
+        assertThat(search.getResults()).containsExactly("Timee eventt");
         search.gotoSelection();
         ListItem event = new DayView().focusedTimeEvents().focused();
-        assertThat(event.string).isEqualTo("Time event");
+        assertThat(event.string).isEqualTo("Timee eventt");
     }
 
     @Test
@@ -85,12 +85,13 @@ public class SearchUITest {
 
     @BeforeAll
     public static void beforeAll() {
-        system.createDayTask("Day task", date);
-        system.createDayTimeEvent("Time event", time(date, 11), time(date, 13));
-        system.createDayEvent("Day event", date, date.plusDays(1));
-        system.createWeekTask("Week task", week);
-        system.createInboxItem("Inbox item");
-        system.createProject("Project 1");
+        // avoid naming collision with other system tests
+        system.createDayTask("Dayy taskk", date);
+        system.createDayTimeEvent("Timee eventt", time(date, 11), time(date, 13));
+        system.createDayEvent("Dayy eventt", date, date.plusDays(1));
+        system.createWeekTask("Weekk taskk", week);
+        system.createInboxItem("Inboxx itemm");
+        system.createProject("Projectt 1");
         dayCaptain.initWithLogin();
     }
 
@@ -100,8 +101,8 @@ public class SearchUITest {
         system.deleteDayTimeEvents(date);
         system.deleteDayEvents(date);
         system.deleteWeekTasks(week);
-        system.deleteBacklogItemsInAllBacklogs("Inbox item", "Backlog item");
-        system.deleteProjects("Project 1");
+        system.deleteBacklogItemsInAllBacklogs("Inboxx itemm");
+        system.deleteProjects("Projectt 1");
         dayCaptain.close();
     }
 

@@ -212,12 +212,12 @@ public class AssignWeekTaskFromBacklogItemUITest {
         editEvent.close();
 
         WeekView week = dayCaptain.week();
-        EditTaskAction editTask = week.dayTasks(DATE.getDayOfWeek()).edit();
+        EditTaskAction editTask = week.dayTasksOffset(0).edit();
         assertThat(editTask.getArea()).isEqualTo("IT work");
         assertThat(editTask.getProject()).isEqualTo("No project");
         editTask.close();
 
-        editEvent = week.dayTimeEvents(DATE.getDayOfWeek()).edit();
+        editEvent = week.dayTimeEventsOffset(0).edit();
         assertThat(editEvent.getArea()).isEqualTo("IT work");
         assertThat(editEvent.getProject()).isEqualTo("No project");
         editEvent.close();
