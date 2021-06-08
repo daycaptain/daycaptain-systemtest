@@ -521,8 +521,8 @@ public class DayCaptainSystem {
         return requestCreateVerify(entity, "backlogs");
     }
 
-    public void updateBacklog(Backlog backlog, String property, Object value) {
-        JsonObject patch = patch(property, value);
+    public void updateBacklog(Backlog backlog, Object... values) {
+        JsonObject patch = patch(values);
         Response response = requestUpdate(backlog._self, patch);
         verifySuccess(response);
     }
