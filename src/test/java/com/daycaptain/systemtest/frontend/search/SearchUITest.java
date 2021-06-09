@@ -8,6 +8,7 @@ import com.daycaptain.systemtest.frontend.entity.Task;
 import com.daycaptain.systemtest.frontend.views.DayView;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.threeten.extra.YearWeek;
 
@@ -43,41 +44,49 @@ public class SearchUITest {
         assertThat(event.string).isEqualTo("Timee eventt");
     }
 
+    @Disabled
     @Test
     void day_view_search_jump_to_day_event() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void day_view_search_jump_to_week_task() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void day_view_search_jump_to_project() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void day_view_search_jump_to_inbox_item() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void day_view_search_jump_to_backlog_item() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void week_view_search_jump_to_day_task() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void month_view_search_jump_to_day_task() {
         throw new UnsupportedOperationException();
     }
 
+    @Disabled
     @Test
     void backlogs_view_search_jump_to_day_task() {
         throw new UnsupportedOperationException();

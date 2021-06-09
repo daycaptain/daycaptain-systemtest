@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static com.daycaptain.systemtest.frontend.views.View.ctrlPress;
-import static com.daycaptain.systemtest.frontend.views.View.press;
+import static com.daycaptain.systemtest.frontend.views.View.*;
 import static org.openqa.selenium.Keys.ENTER;
 
 public class SearchAction extends Action {
@@ -32,7 +31,7 @@ public class SearchAction extends Action {
 
     public void gotoSelection(int index) {
         for (int i = 0; i < index; i++)
-            ctrlPress("j");
+            altPress("j");
         press(ENTER);
     }
 

@@ -113,11 +113,11 @@ public class UpdateAreaTest {
         assertThat(itemId).isNotNull();
 
         Area area = dayCaptain.getArea(itemId);
-        assertThat(area.color).isEqualTo("#1e90ff");
-
-        dayCaptain.updateArea(area, "color", "#ffff00");
-        area = dayCaptain.getArea(itemId);
         assertThat(area.color).isEqualTo("#ffff00");
+
+        dayCaptain.updateArea(area, "color", "#ffff12");
+        area = dayCaptain.getArea(itemId);
+        assertThat(area.color).isEqualTo("#ffff12");
     }
 
     @Test
@@ -126,13 +126,13 @@ public class UpdateAreaTest {
         assertThat(itemId).isNotNull();
 
         String color = dayCaptain.getArea(itemId).color;
-        assertThat(color).isEqualTo("#1e90ff");
+        assertThat(color).isEqualTo("#ffff00");
 
         itemId = dayCaptain.createArea("Another area");
         assertThat(itemId).isNotNull();
 
         Area area = dayCaptain.getArea(itemId);
-        assertThat(area.color).isEqualTo("#ffff00");
+        assertThat(area.color).isEqualTo("#8a2be2");
 
         AssertionError error = Assertions.assertThrows(AssertionError.class, () -> dayCaptain.updateArea(area, "color", "#1e90ff"));
         assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
@@ -144,11 +144,11 @@ public class UpdateAreaTest {
         assertThat(itemId).isNotNull();
 
         Area area = dayCaptain.getArea(itemId);
-        assertThat(area.color).isEqualTo("#1e90ff");
+        assertThat(area.color).isEqualTo("#ffff00");
 
-        dayCaptain.updateArea(area, "color", "#1e90ff");
+        dayCaptain.updateArea(area, "color", "#ffff00");
         area = dayCaptain.getArea(itemId);
-        assertThat(area.color).isEqualTo("#1e90ff");
+        assertThat(area.color).isEqualTo("#ffff00");
     }
 
     @Test

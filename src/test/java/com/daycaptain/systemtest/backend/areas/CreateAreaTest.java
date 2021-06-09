@@ -29,7 +29,7 @@ public class CreateAreaTest {
         assertThat(area._self).isEqualTo(itemId);
         assertThat(area.name).isEqualTo("New area");
         assertThat(area.order).isEqualTo(size + 1);
-        assertThat(area.color).isEqualTo("#1e90ff");
+        assertThat(area.color).isEqualTo("#ffff00");
         assertThat(area.keyCode).isEqualTo("N");
     }
 
@@ -43,7 +43,7 @@ public class CreateAreaTest {
         assertThat(area._self).isEqualTo(itemId);
         assertThat(area.name).isEqualTo("New area");
         assertThat(area.order).isEqualTo(size + 1);
-        assertThat(area.color).isEqualTo("#1e90ff");
+        assertThat(area.color).isEqualTo("#ffff00");
         assertThat(area.keyCode).isEqualTo("N");
 
         itemId = dayCaptain.createArea("New area 2");
@@ -53,7 +53,7 @@ public class CreateAreaTest {
         assertThat(area._self).isEqualTo(itemId);
         assertThat(area.name).isEqualTo("New area 2");
         assertThat(area.order).isEqualTo(size + 2);
-        assertThat(area.color).isEqualTo("#ffff00");
+        assertThat(area.color).isEqualTo("#8a2be2");
         assertThat(area.keyCode).isEqualTo("E");
     }
 

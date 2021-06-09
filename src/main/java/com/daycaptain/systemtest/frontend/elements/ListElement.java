@@ -7,8 +7,7 @@ import com.daycaptain.systemtest.frontend.views.DynamicView;
 
 import java.util.List;
 
-import static com.daycaptain.systemtest.frontend.views.View.ctrlPress;
-import static com.daycaptain.systemtest.frontend.views.View.press;
+import static com.daycaptain.systemtest.frontend.views.View.*;
 import static java.lang.Math.abs;
 
 public abstract class ListElement {
@@ -56,7 +55,7 @@ public abstract class ListElement {
         select(index, useJump);
         String moveDirectionKey = moveDistance < 0 ? "k" : "j";
         String keySequence = useJump ? abs(moveDistance) + moveDirectionKey : moveDirectionKey.repeat(abs(moveDistance));
-        ctrlPress(keySequence);
+        altPress(keySequence);
         DynamicView.waitForLoading();
     }
 

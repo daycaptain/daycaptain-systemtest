@@ -19,6 +19,14 @@ public abstract class View {
                 .perform();
     }
 
+    public static void altPress(CharSequence... key) {
+        actions()
+                .keyDown(Keys.ALT)
+                .sendKeys(key)
+                .keyUp(Keys.ALT)
+                .perform();
+    }
+
     public static void ctrlPress(CharSequence... key) {
         actions()
                 .keyDown(Keys.CONTROL)
