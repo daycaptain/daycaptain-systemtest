@@ -1,9 +1,10 @@
 package com.daycaptain.systemtest.frontend.elements;
 
+import com.daycaptain.systemtest.frontend.actions.AddRelationAction;
 import com.daycaptain.systemtest.frontend.actions.CreateTaskAction;
 import com.daycaptain.systemtest.frontend.actions.EditTaskAction;
-import com.daycaptain.systemtest.frontend.views.DynamicView;
 import com.daycaptain.systemtest.frontend.entity.Task;
+import com.daycaptain.systemtest.frontend.views.DynamicView;
 import org.openqa.selenium.Keys;
 
 import java.util.List;
@@ -36,6 +37,12 @@ public class TaskList extends ListElement {
 
     public EditTaskAction edit(int index) {
         select(index);
+        press("e");
+        return new EditTaskAction();
+    }
+
+    public EditTaskAction editLast() {
+        shiftPress("g");
         press("e");
         return new EditTaskAction();
     }
@@ -85,6 +92,14 @@ public class TaskList extends ListElement {
     public Task focused() {
         $$("dp-task").should(anyMatch("Either of the elements has to be focused", el -> $(el).is(focused)));
         return Task.fromElement($(getFocusedElement()));
+    }
+
+    public void connectToItem(String name, int index) {
+        select(index);
+        press("f");
+        AddRelationAction action = new AddRelationAction();
+        action.setSearchTerm(name);
+        action.save();
     }
 
 }

@@ -42,7 +42,7 @@ public class AssignDayTaskFromBacklogItemUITest {
 
         TaskList dayTasks = dayCaptain.day().tasks();
         assertThat(dayTasks.getNames()).containsExactly("New day task");
-        EditTaskAction editTask = dayTasks.edit(dayTasks.getList().size() - 1);
+        EditTaskAction editTask = dayTasks.editLast();
         assertThat(editTask.getRelationNames()).hasSize(1);
         assertThat(editTask.getRelationNames().get(0)).contains("New backlog item").contains("INBOX");
         editTask.close();
@@ -65,7 +65,7 @@ public class AssignDayTaskFromBacklogItemUITest {
 
         TaskList tasks = dayCaptain.day().tasks();
         assertThat(tasks.getNames()).containsExactly("New day task");
-        EditTaskAction editTask = tasks.edit(tasks.getList().size() - 1);
+        EditTaskAction editTask = tasks.editLast();
         assertThat(editTask.getRelationNames()).hasSize(1);
         assertThat(editTask.getRelationNames().get(0)).contains("New contact item").contains("To-contact");
         editTask.close();
@@ -89,7 +89,7 @@ public class AssignDayTaskFromBacklogItemUITest {
 
         TaskList tasks = dayCaptain.day().tasks();
         assertThat(tasks.getNames()).containsExactly("New day task");
-        EditTaskAction editTask = tasks.edit(tasks.getList().size() - 1);
+        EditTaskAction editTask = tasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("IT work");
         assertThat(editTask.getProject()).isEqualTo("No project");
         assertThat(editTask.getRelationNames()).hasSize(1);
@@ -116,7 +116,7 @@ public class AssignDayTaskFromBacklogItemUITest {
 
         TaskList tasks = dayCaptain.day().tasks();
         assertThat(tasks.getNames()).containsExactly("New day task");
-        EditTaskAction editTask = tasks.edit(tasks.getList().size() - 1);
+        EditTaskAction editTask = tasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("Business");
         assertThat(editTask.getProject()).isEqualTo("Business idea");
         assertThat(editTask.getRelationNames()).hasSize(1);
@@ -143,7 +143,7 @@ public class AssignDayTaskFromBacklogItemUITest {
 
         TaskList tasks = dayCaptain.day().tasks();
         assertThat(tasks.getNames()).containsExactly("New day task");
-        EditTaskAction editTask = tasks.edit(tasks.getList().size() - 1);
+        EditTaskAction editTask = tasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("IT work");
         assertThat(editTask.getProject()).isEqualTo("No project");
         assertThat(editTask.getRelationNames()).hasSize(1);
@@ -170,7 +170,7 @@ public class AssignDayTaskFromBacklogItemUITest {
 
         TaskList tasks = dayCaptain.day().tasks();
         assertThat(tasks.getNames()).containsExactly("New day task");
-        EditTaskAction editTask = tasks.edit(tasks.getList().size() - 1);
+        EditTaskAction editTask = tasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("Business");
         assertThat(editTask.getProject()).isEqualTo("Business idea");
         assertThat(editTask.getRelationNames()).hasSize(1);

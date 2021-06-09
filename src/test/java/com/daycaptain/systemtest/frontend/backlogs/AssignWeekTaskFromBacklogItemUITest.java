@@ -2,6 +2,7 @@ package com.daycaptain.systemtest.frontend.backlogs;
 
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.frontend.DayCaptainUI;
+import com.daycaptain.systemtest.frontend.actions.CreateTaskAction;
 import com.daycaptain.systemtest.frontend.actions.EditBacklogItemAction;
 import com.daycaptain.systemtest.frontend.actions.EditTaskAction;
 import com.daycaptain.systemtest.frontend.actions.EditTimeEventAction;
@@ -41,7 +42,7 @@ public class AssignWeekTaskFromBacklogItemUITest {
 
         TaskList weekTasks = dayCaptain.week().weekTasks();
         assertThat(weekTasks.getNames()).containsExactly("New week task");
-        EditTaskAction editTask = weekTasks.edit(weekTasks.getList().size() - 1);
+        EditTaskAction editTask = weekTasks.editLast();
         assertThat(editTask.getRelationNames()).hasSize(1);
         assertThat(editTask.getRelationNames().get(0)).contains("New backlog item").contains("INBOX");
         editTask.close();
@@ -64,28 +65,32 @@ public class AssignWeekTaskFromBacklogItemUITest {
 
         TaskList weekTasks = dayCaptain.week().weekTasks();
         assertThat(weekTasks.getNames()).containsExactly("New week task");
-        EditTaskAction editTask = weekTasks.edit(weekTasks.getList().size() - 1);
+        EditTaskAction editTask = weekTasks.editLast();
         assertThat(editTask.getRelationNames()).hasSize(1);
         assertThat(editTask.getRelationNames().get(0)).contains("New contact item").contains("To-contact");
         editTask.close();
     }
 
     @Test
-    @Disabled
     void assign_existing_task_from_backlog_item() {
-//        URI itemId = dayCaptain.createInboxItem("New backlog item");
-//        assertThat(itemId).isNotNull();
-//
-//        BacklogItem item = dayCaptain.getBacklogItem(itemId);
-//        assertThat(item.string).isEqualTo("New backlog item");
-//
-//        URI taskId = dayCaptain.createWeekTask("New week task", WEEK);
-//        Task task = dayCaptain.getTask(taskId);
-//        assertThat(task.assignedFromBacklogTask).isNull();
-//
-//        dayCaptain.addRelation(task, item._self);
-//        task = dayCaptain.getTask(taskId);
-//        assertThat(task.assignedFromBacklogTask).isEqualTo(item._self);
+        BacklogsView backlogs = dayCaptain.backlogs();
+
+        backlogs.createInboxItem("New backlog item");
+        assertThat(backlogs.getCurrentBacklogItemNames()).last().isEqualTo("New backlog item");
+
+        TaskList weekTasks = dayCaptain.week().weekTasks();
+        CreateTaskAction action = weekTasks.create();
+        action.setName("New week task");
+        action.save();
+        assertThat(weekTasks.getNames()).containsExactly("New week task");
+
+        weekTasks.connectToItem("New backlog item", 0);
+        assertThat(weekTasks.focused().hasRelation).isTrue();
+
+        EditTaskAction editTask = weekTasks.editLast();
+        assertThat(editTask.getRelationNames()).hasSize(1);
+        assertThat(editTask.getRelationNames().get(0)).contains("New backlog item").contains("INBOX");
+        editTask.close();
     }
 
     @Test
@@ -106,7 +111,7 @@ public class AssignWeekTaskFromBacklogItemUITest {
 
         TaskList weekTasks = dayCaptain.week().weekTasks();
         assertThat(weekTasks.getNames()).containsExactly("New week task");
-        EditTaskAction editTask = weekTasks.edit(weekTasks.getList().size() - 1);
+        EditTaskAction editTask = weekTasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("IT work");
         assertThat(editTask.getProject()).isEqualTo("No project");
         assertThat(editTask.getRelationNames()).hasSize(1);
@@ -133,7 +138,7 @@ public class AssignWeekTaskFromBacklogItemUITest {
 
         TaskList weekTasks = dayCaptain.week().weekTasks();
         assertThat(weekTasks.getNames()).containsExactly("New week task");
-        EditTaskAction editTask = weekTasks.edit(weekTasks.getList().size() - 1);
+        EditTaskAction editTask = weekTasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("Business");
         assertThat(editTask.getProject()).isEqualTo("Business idea");
         assertThat(editTask.getRelationNames()).hasSize(1);
@@ -160,7 +165,7 @@ public class AssignWeekTaskFromBacklogItemUITest {
 
         TaskList weekTasks = dayCaptain.week().weekTasks();
         assertThat(weekTasks.getNames()).containsExactly("New week task");
-        EditTaskAction editTask = weekTasks.edit(weekTasks.getList().size() - 1);
+        EditTaskAction editTask = weekTasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("IT work");
         assertThat(editTask.getProject()).isEqualTo("No project");
         assertThat(editTask.getRelationNames()).hasSize(1);
@@ -187,7 +192,7 @@ public class AssignWeekTaskFromBacklogItemUITest {
 
         TaskList weekTasks = dayCaptain.week().weekTasks();
         assertThat(weekTasks.getNames()).containsExactly("New week task");
-        EditTaskAction editTask = weekTasks.edit(weekTasks.getList().size() - 1);
+        EditTaskAction editTask = weekTasks.editLast();
         assertThat(editTask.getArea()).isEqualTo("Business");
         assertThat(editTask.getProject()).isEqualTo("Business idea");
         assertThat(editTask.getRelationNames()).hasSize(1);
