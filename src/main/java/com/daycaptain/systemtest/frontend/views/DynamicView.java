@@ -2,6 +2,7 @@ package com.daycaptain.systemtest.frontend.views;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.daycaptain.systemtest.frontend.actions.DateJump;
 import com.daycaptain.systemtest.frontend.actions.SearchAction;
 
 import static com.codeborne.selenide.Condition.cssClass;
@@ -28,6 +29,12 @@ public abstract class DynamicView extends View {
         // might not be available in all views
         press("/");
         return new SearchAction();
+    }
+
+    public DateJump dateJump() {
+        // might not be available in all views
+        press("gd");
+        return new DateJump();
     }
 
 }
