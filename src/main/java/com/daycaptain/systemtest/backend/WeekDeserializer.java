@@ -1,8 +1,8 @@
 package com.daycaptain.systemtest.backend;
 
 import com.daycaptain.systemtest.backend.entity.Day;
-import com.daycaptain.systemtest.backend.entity.Week;
 import com.daycaptain.systemtest.backend.entity.Task;
+import com.daycaptain.systemtest.backend.entity.Week;
 
 import javax.json.bind.serializer.DeserializationContext;
 import javax.json.bind.serializer.JsonbDeserializer;
@@ -24,6 +24,8 @@ public class WeekDeserializer implements JsonbDeserializer<Week> {
             JsonParser.Event event = parser.next();
             if (event == JsonParser.Event.KEY_NAME && parser.getString().equals("tasks")) {
                 week.tasks = ctx.deserialize(listType, parser);
+            } else if (event == JsonParser.Event.KEY_NAME && parser.getString().equals("note")) {
+                week.note = ctx.deserialize(String.class, parser);
             } else if (event == JsonParser.Event.KEY_NAME && Character.isDigit(parser.getString().charAt(0))) {
                 week.days.put(LocalDate.parse(parser.getString()), ctx.deserialize(Day.class, parser));
             }

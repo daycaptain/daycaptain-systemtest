@@ -16,4 +16,6 @@ public class Week {
 
     public Map<LocalDate, Day> days = new HashMap<>();
 
+    public String note;
+
 }

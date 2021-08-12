@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.daycaptain.systemtest.frontend.actions.DateJump;
 import com.daycaptain.systemtest.frontend.actions.SearchAction;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Selenide.$;
@@ -35,6 +36,21 @@ public abstract class DynamicView extends View {
         // might not be available in all views
         press("gd");
         return new DateJump();
+    }
+
+    public String getPageNote() {
+        // might not be available in all views
+        return $("dp-note textarea").val();
+    }
+
+    public void updatePageNote(String note) {
+        // might not be available in all views
+        press("q'");
+        $("dp-note textarea").clear();
+        press(Keys.ESCAPE + "'");
+        press(note);
+        ctrlPress(Keys.ENTER);
+        waitForLoading();
     }
 
 }

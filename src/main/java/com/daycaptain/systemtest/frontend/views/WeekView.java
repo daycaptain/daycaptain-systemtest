@@ -15,6 +15,16 @@ public class WeekView extends DynamicView {
         return $("header.week-header").text();
     }
 
+    public void nextWeek() {
+        press("gwl");
+        waitForLoading();
+    }
+
+    public void previousWeek() {
+        press("gwh");
+        waitForLoading();
+    }
+
     public DayTimeEventList dayTimeEvents(DayOfWeek dayOfWeek) {
         press("gwr");
         // doesn't work if week is YearWeek.now()

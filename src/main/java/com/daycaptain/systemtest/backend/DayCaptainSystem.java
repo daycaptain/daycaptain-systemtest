@@ -7,10 +7,7 @@ import org.threeten.extra.YearWeek;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -493,6 +490,22 @@ public class DayCaptainSystem {
         Response response = requestUpdate(event._self, patch);
         verifySuccess(response);
         return getActionId(response);
+    }
+
+    public void updateDayNote(LocalDate date, String note) {
+        updateNote(date.toString(), note);
+    }
+
+    public void updateWeekNote(YearWeek yearWeek, String note) {
+        updateNote(yearWeek.toString(), note);
+    }
+
+    private void updateNote(String path, String note) {
+        Invocation.Builder builder = rootTarget.path(path).path("note").request();
+        Response response = (note != null)
+                ? builder.put(Entity.text(note))
+                : builder.delete();
+        verifySuccess(response);
     }
 
     public URI createBacklog(String name) {

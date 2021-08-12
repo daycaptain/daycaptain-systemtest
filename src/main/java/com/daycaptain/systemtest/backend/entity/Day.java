@@ -18,6 +18,8 @@ public class Day {
     // to preserve order
     public DayStatistics statistics;
 
+    public String note;
+
     public static class DayStatistics {
 
         public Statistics planned;

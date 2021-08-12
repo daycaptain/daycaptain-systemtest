@@ -33,7 +33,7 @@ public class DayCaptainUI {
         WebDriverRunner.driver().getWebDriver().manage().addCookie(new Cookie("q_session", CookieAuthentication.SESSION_COOKIE));
     }
 
-    private UriBuilder uriBuilder() {
+    private static UriBuilder uriBuilder() {
         String port = System.getProperty("daycaptain.test.port", "8080");
         String host = System.getProperty("daycaptain.test.host", "localhost");
         return UriBuilder.fromUri("http://{host}:{port}/")
