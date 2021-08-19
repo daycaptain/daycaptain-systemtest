@@ -697,6 +697,18 @@ public class DayCaptainSystem {
         JsonObject entity = Json.createObjectBuilder()
                 .add("string", string)
                 .build();
+        return requestDetection(entity);
+    }
+
+    public Detection detectWithTimes(String string) {
+        JsonObject entity = Json.createObjectBuilder()
+                .add("string", string)
+                .add("times", true)
+                .build();
+        return requestDetection(entity);
+    }
+
+    private Detection requestDetection(JsonObject entity) {
         Response response = requestCreate(entity, "detections");
         verifySuccess(response);
         return response.readEntity(Detection.class);

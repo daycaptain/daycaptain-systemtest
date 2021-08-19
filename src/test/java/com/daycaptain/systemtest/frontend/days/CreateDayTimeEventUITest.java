@@ -69,6 +69,26 @@ public class CreateDayTimeEventUITest {
         editTaskAction.close();
     }
 
+    @Test
+    void withDetectedTime() {
+        CreateDayTimeEventAction createAction = events.create();
+        createAction.setName("Project");
+        createAction.assertStartTime("08:00");
+        createAction.assertEndTime("11:00");
+
+        createAction.setName("Reading");
+        createAction.assertStartTime("15:00");
+        createAction.assertEndTime("16:15");
+
+        createAction.setStartTime("13:00");
+        createAction.setEndTime("14:00");
+
+        createAction.setName("Project");
+        createAction.assertStartTime("13:00");
+        createAction.assertEndTime("14:00");
+        createAction.close();
+    }
+
     @BeforeEach
     void beforeEach() {
         system.deleteDayTimeEvents(date);

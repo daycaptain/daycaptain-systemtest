@@ -1,6 +1,5 @@
 package com.daycaptain.systemtest.frontend.weeks.create;
 
-import com.daycaptain.systemtest.frontend.scenarios.CreateListItemScenario;
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.frontend.DayCaptainUI;
 import com.daycaptain.systemtest.frontend.actions.CreateAction;
@@ -9,6 +8,7 @@ import com.daycaptain.systemtest.frontend.actions.EditInformationAction;
 import com.daycaptain.systemtest.frontend.actions.EditTimeEventAction;
 import com.daycaptain.systemtest.frontend.elements.DayTimeEventList;
 import com.daycaptain.systemtest.frontend.entity.ListItem;
+import com.daycaptain.systemtest.frontend.scenarios.CreateListItemScenario;
 import com.daycaptain.systemtest.frontend.views.WeekView;
 import org.junit.jupiter.api.*;
 import org.threeten.extra.YearWeek;
@@ -71,6 +71,26 @@ public class CreateDayTimeEventUITest {
         assertThat(editTaskAction.getProject()).isEqualTo("No project");
         assertThat(editTaskAction.getNote()).isEqualTo("This is a note.");
         editTaskAction.close();
+    }
+
+    @Test
+    void withDetectedTime() {
+        CreateDayTimeEventAction createAction = events.create();
+        createAction.setName("Project");
+        createAction.assertStartTime("08:00");
+        createAction.assertEndTime("11:00");
+
+        createAction.setName("Reading");
+        createAction.assertStartTime("15:00");
+        createAction.assertEndTime("16:15");
+
+        createAction.setStartTime("13:00");
+        createAction.setEndTime("14:00");
+
+        createAction.setName("Project");
+        createAction.assertStartTime("13:00");
+        createAction.assertEndTime("14:00");
+        createAction.close();
     }
 
     @BeforeEach
