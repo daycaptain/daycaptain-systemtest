@@ -20,6 +20,11 @@ public class WeekView extends DynamicView {
         waitForLoading();
     }
 
+    public void nextWeeks(int weeks) {
+        press("gw" + weeks + "l");
+        waitForLoading();
+    }
+
     public void previousWeek() {
         press("gwh");
         waitForLoading();

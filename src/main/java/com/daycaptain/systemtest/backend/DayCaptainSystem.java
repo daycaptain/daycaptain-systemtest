@@ -312,6 +312,20 @@ public class DayCaptainSystem {
         return requestCreateVerify(taskEntity, date.toString(), "tasks");
     }
 
+    public URI createDayTaskRepeat(String name, LocalDate date, int repeat) {
+        return createDayTaskRepeat(name, date, repeat, 1);
+    }
+
+    public URI createDayTaskRepeat(String name, LocalDate date, int repeat, int repeatCadenceDays) {
+        JsonObject taskEntity = Json.createObjectBuilder()
+                .add("string", name)
+                .add("repeat", repeat)
+                .add("repeatCadence", repeatCadenceDays)
+                .build();
+
+        return requestCreateVerify(taskEntity, date.toString(), "tasks");
+    }
+
     public String updateTask(Task task, Object... values) {
         JsonObject patch = patch(values);
 
@@ -375,6 +389,20 @@ public class DayCaptainSystem {
         JsonObject taskEntity = Json.createObjectBuilder()
                 .add("string", string)
                 .add("note", note)
+                .build();
+
+        return requestCreateVerify(taskEntity, week.toString(), "tasks");
+    }
+
+    public URI createWeekTaskRepeat(String name, YearWeek week, int repeat) {
+        return createWeekTaskRepeat(name, week, repeat, 1);
+    }
+
+    public URI createWeekTaskRepeat(String name, YearWeek week, int repeat, int repeatCadenceDays) {
+        JsonObject taskEntity = Json.createObjectBuilder()
+                .add("string", name)
+                .add("repeat", repeat)
+                .add("repeatCadence", repeatCadenceDays)
                 .build();
 
         return requestCreateVerify(taskEntity, week.toString(), "tasks");

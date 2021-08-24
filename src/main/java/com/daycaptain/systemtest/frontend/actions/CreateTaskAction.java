@@ -25,4 +25,13 @@ public class CreateTaskAction extends CreateAction {
             return matcher.replaceFirst("$1");
         return null;
     }
+
+    public void setRepeated(int repeated, int cadence) {
+        press(Keys.ESCAPE + "r");
+        press("l".repeat(repeated));
+        if (cadence > 0)
+            press("k".repeat(cadence - 1));
+        press(Keys.ESCAPE);
+    }
+
 }

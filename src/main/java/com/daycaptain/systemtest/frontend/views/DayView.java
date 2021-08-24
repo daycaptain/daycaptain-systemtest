@@ -52,6 +52,11 @@ public class DayView extends DynamicView {
         waitForLoading();
     }
 
+    public void nextDays(int days) {
+        press("q" + days + "l");
+        waitForLoading();
+    }
+
     public void previousDay() {
         press("qh");
         waitForLoading();
