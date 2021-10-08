@@ -26,6 +26,8 @@ public class WeekDeserializer implements JsonbDeserializer<Week> {
                 week.tasks = ctx.deserialize(listType, parser);
             } else if (event == JsonParser.Event.KEY_NAME && parser.getString().equals("note")) {
                 week.note = ctx.deserialize(String.class, parser);
+            } else if (event == JsonParser.Event.KEY_NAME && parser.getString().equals("prevZone")) {
+                week.prevZone = ctx.deserialize(String.class, parser);
             } else if (event == JsonParser.Event.KEY_NAME && Character.isDigit(parser.getString().charAt(0))) {
                 week.days.put(LocalDate.parse(parser.getString()), ctx.deserialize(Day.class, parser));
             }

@@ -13,15 +13,16 @@ public class ListItem {
     public boolean hasArea;
     public String project;
 
-    public static ListItem fromElement(SelenideElement element) {
-        ListItem listItem = new ListItem();
-        listItem.string = element.$("name").text();
-        listItem.hasNote = hasIcon(element, "description");
-        listItem.hasRelation = hasIcon(element, "code");
-        listItem.hasArea = element.$("div.area").is(exist);
-        listItem.project = element.$$("span.project").texts().stream().findAny().orElse(null);
+    protected ListItem(SelenideElement element) {
+        string = element.$("name").text();
+        hasNote = hasIcon(element, "description");
+        hasRelation = hasIcon(element, "code");
+        hasArea = element.$("div.area").is(exist);
+        project = element.$$("span.project").texts().stream().findAny().orElse(null);
+    }
 
-        return listItem;
+    public static ListItem fromElement(SelenideElement element) {
+        return new ListItem(element);
     }
 
     static boolean hasIcon(SelenideElement element, String assignment) {

@@ -2,9 +2,13 @@ package com.daycaptain.systemtest.frontend.actions;
 
 import org.openqa.selenium.Keys;
 
+import java.time.ZoneId;
+
+import static com.codeborne.selenide.Condition.ownText;
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.actions;
 import static com.daycaptain.systemtest.frontend.views.View.press;
+import static com.daycaptain.systemtest.frontend.views.View.waitFor;
 
 public class CreateDayTimeEventAction extends CreateAction {
 
@@ -14,10 +18,24 @@ public class CreateDayTimeEventAction extends CreateAction {
         press(Keys.ESCAPE);
     }
 
+    public void setStartTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE + "t");
+        actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
+        press(Keys.ENTER);
+        waitFor(50);
+    }
+
     public void setEndTime(String endTime) {
         press(Keys.ESCAPE + "de");
         actions().pause(50).sendKeys(endTime).pause(50).perform();
         press(Keys.ESCAPE);
+    }
+
+    public void setEndTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE + "dt");
+        actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
+        press(Keys.ENTER);
+        waitFor(50);
     }
 
     public void assertStartTime(String time) {
@@ -26,6 +44,11 @@ public class CreateDayTimeEventAction extends CreateAction {
 
     public void assertEndTime(String time) {
         overlay.$(".end-time input").shouldHave(value(time));
+    }
+
+    public void assertTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE);
+        overlay.$(".time-zone-label").shouldHave(ownText(zone.toString()));
     }
 
 }

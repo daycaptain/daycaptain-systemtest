@@ -20,6 +20,8 @@ public class Day {
 
     public String note;
 
+    public String prevZone;
+
     public static class DayStatistics {
 
         public Statistics planned;

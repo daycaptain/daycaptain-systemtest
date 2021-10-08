@@ -25,6 +25,9 @@ public class MultipleTabUpdateUITest {
     void change_should_be_updated_in_multiple_tabs() {
         DayView day = dayCaptain.day();
 
+        // close potential messages
+        press(Keys.ESCAPE);
+
         // hack to open a new tab
         press(".");
         SelenideElement a = $("main-navigation ul li a");
@@ -33,6 +36,7 @@ public class MultipleTabUpdateUITest {
         // will be in backlogs view
         switchTo().window(1);
         dayCaptain.day();
+        press(Keys.ESCAPE);
 
         // need to refresh to activate service workers
         refresh();

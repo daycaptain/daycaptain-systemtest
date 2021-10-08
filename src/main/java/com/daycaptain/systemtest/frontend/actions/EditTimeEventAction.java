@@ -2,8 +2,10 @@ package com.daycaptain.systemtest.frontend.actions;
 
 import org.openqa.selenium.Keys;
 
+import java.time.ZoneId;
 import java.util.List;
 
+import static com.codeborne.selenide.Condition.ownText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
 import static com.daycaptain.systemtest.frontend.views.View.press;
@@ -41,6 +43,11 @@ public class EditTimeEventAction extends EditInformationAction {
     protected void waitForLoading() {
         overlay.$("edit-time-event").shouldBe(visible);
         overlay.$("dp-relations div.loading").shouldNotBe(visible);
+    }
+
+    public void assertTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE);
+        overlay.$(".time-zone-label").shouldHave(ownText(zone.toString()));
     }
 
 }

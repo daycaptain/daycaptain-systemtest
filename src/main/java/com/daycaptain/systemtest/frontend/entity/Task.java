@@ -8,31 +8,26 @@ public class Task extends ListItem {
     public double plannedTime;
     public double assignedTime;
 
-    public static Task fromElement(SelenideElement element) {
-        ListItem listItem = ListItem.fromElement(element);
-        Task task = new Task();
-        task.string = listItem.string;
-        task.project = listItem.project;
-        task.hasArea = listItem.hasArea;
-        task.hasNote = listItem.hasNote;
-        task.hasRelation = listItem.hasRelation;
-
-        task.status = element.getAttribute("class").toUpperCase();
+    protected Task(SelenideElement element) {
+        super(element);
+        status = element.getAttribute("class").toUpperCase();
 
         String textPieces = element.$("div").text();
         String[] textSplit = textPieces.split(" ");
 
         if (hasIcon(element, "assignment")) {
             int position = findIconTextPosition(textSplit, "assignment");
-            task.plannedTime = Double.parseDouble(textSplit[position]);
+            plannedTime = Double.parseDouble(textSplit[position]);
         }
 
         if (hasIcon(element, "assignment_returned")) {
             int position = findIconTextPosition(textSplit, "assignment_returned");
-            task.assignedTime = Double.parseDouble(textSplit[position]);
+            assignedTime = Double.parseDouble(textSplit[position]);
         }
+    }
 
-        return task;
+    public static Task fromElement(SelenideElement element) {
+        return new Task(element);
     }
 
     private static int findIconTextPosition(String[] pieces, String icon) {

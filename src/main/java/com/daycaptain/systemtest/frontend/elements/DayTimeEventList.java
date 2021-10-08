@@ -1,8 +1,9 @@
 package com.daycaptain.systemtest.frontend.elements;
 
 import com.daycaptain.systemtest.frontend.actions.CreateDayTimeEventAction;
-import com.daycaptain.systemtest.frontend.entity.ListItem;
 import com.daycaptain.systemtest.frontend.actions.EditTimeEventAction;
+import com.daycaptain.systemtest.frontend.entity.ListItem;
+import com.daycaptain.systemtest.frontend.entity.TimeEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,9 +37,9 @@ public class DayTimeEventList extends ListElement {
         return new EditTimeEventAction();
     }
 
-    public List<ListItem> getList() {
+    public List<TimeEvent> getList() {
         return $$(cssSelector + " day-time-event").stream()
-                .map(ListItem::fromElement)
+                .map(TimeEvent::fromElement)
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,5 @@
 package com.daycaptain.systemtest.frontend.days;
 
-import com.daycaptain.systemtest.frontend.scenarios.CreateListItemScenario;
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.frontend.DayCaptainUI;
 import com.daycaptain.systemtest.frontend.actions.CreateAction;
@@ -8,13 +7,16 @@ import com.daycaptain.systemtest.frontend.actions.CreateDayTimeEventAction;
 import com.daycaptain.systemtest.frontend.actions.EditInformationAction;
 import com.daycaptain.systemtest.frontend.actions.EditTimeEventAction;
 import com.daycaptain.systemtest.frontend.elements.DayTimeEventList;
-import com.daycaptain.systemtest.frontend.entity.ListItem;
+import com.daycaptain.systemtest.frontend.entity.TimeEvent;
+import com.daycaptain.systemtest.frontend.scenarios.CreateListItemScenario;
 import com.daycaptain.systemtest.frontend.views.DayView;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
 
+import static com.daycaptain.systemtest.Times.berlin;
+import static com.daycaptain.systemtest.Times.moscow;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CreateDayTimeEventUITest {
@@ -54,12 +56,13 @@ public class CreateDayTimeEventUITest {
         createAction.setNote("This is a note.");
         createAction.save();
 
-        ListItem item = events.getList().get(0);
+        TimeEvent item = events.getList().get(0);
         assertThat(item.string).isEqualTo("New item");
         assertThat(item.hasArea).isFalse();
         assertThat(item.project).isNull();
         assertThat(item.hasRelation).isFalse();
         assertThat(item.hasNote).isTrue();
+        assertThat(item.timeZoneSwitch).isFalse();
 
         EditInformationAction editTaskAction = events.edit(0);
         assertThat(editTaskAction.getName()).isEqualTo("New item");
@@ -87,6 +90,29 @@ public class CreateDayTimeEventUITest {
         createAction.assertStartTime("13:00");
         createAction.assertEndTime("14:00");
         createAction.close();
+    }
+
+    @Test
+    void withTimeZoneSwitch() {
+        CreateDayTimeEventAction createAction = events.create();
+        createAction.setName("New item");
+        createAction.setStartTime("10:00");
+        createAction.setStartTimeZone(berlin);
+        createAction.setEndTime("11:00");
+        createAction.setEndTimeZone(moscow);
+
+        createAction.assertStartTime("10:00");
+        createAction.assertEndTime("13:00");
+
+        createAction.save();
+
+        TimeEvent item = events.getList().get(0);
+        assertThat(item.string).isEqualTo("New item");
+        assertThat(item.hasArea).isFalse();
+        assertThat(item.project).isNull();
+        assertThat(item.hasRelation).isFalse();
+        assertThat(item.hasNote).isFalse();
+        assertThat(item.timeZoneSwitch).isTrue();
     }
 
     @BeforeEach

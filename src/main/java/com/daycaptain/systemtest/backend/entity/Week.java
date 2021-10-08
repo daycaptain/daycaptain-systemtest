@@ -18,4 +18,6 @@ public class Week {
 
     public String note;
 
+    public String prevZone;
+
 }

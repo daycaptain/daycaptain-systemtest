@@ -15,6 +15,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -91,13 +92,19 @@ public class DayCaptainSystem {
     }
 
     public Week getWeek(YearWeek week) {
-        Response response = requestWeek(week, null);
+        Response response = requestWeek(week, null, null);
         verifySuccess(response);
         return response.readEntity(Week.class);
     }
 
     public Week getWeek(YearWeek week, String areaFilter) {
-        Response response = requestWeek(week, areaFilter);
+        Response response = requestWeek(week, "area", areaFilter);
+        verifySuccess(response);
+        return response.readEntity(Week.class);
+    }
+
+    public Week getWeekWithDailyNotes(YearWeek week) {
+        Response response = requestWeek(week, "notes", "day");
         verifySuccess(response);
         return response.readEntity(Week.class);
     }
@@ -184,10 +191,10 @@ public class DayCaptainSystem {
         return response.readEntity(BacklogItem.class);
     }
 
-    private Response requestWeek(YearWeek week, String areaFilter) {
+    private Response requestWeek(YearWeek week, String queryParam, Object queryValue) {
         WebTarget target = rootTarget.path(week.toString());
-        if (areaFilter != null)
-            target = target.queryParam("area", areaFilter);
+        if (queryParam != null)
+            target = target.queryParam(queryParam, queryValue);
         return target.request(MediaType.APPLICATION_JSON_TYPE).get();
     }
 
@@ -412,12 +419,33 @@ public class DayCaptainSystem {
         return createDayTimeEvent(name, start.toLocalDate(), start, end);
     }
 
+    public URI createDayTimeEvent(String name, ZonedDateTime start, ZonedDateTime end) {
+        JsonObject entity = Json.createObjectBuilder()
+                .add("string", name)
+                .add("start", start.toString())
+                .add("end", end.toString())
+                .build();
+
+        return requestCreateVerify(entity, start.toLocalDate().toString(), "day-time-events");
+    }
+
     // for testing invalid values
     public URI createDayTimeEvent(String name, LocalDate date, LocalDateTime start, LocalDateTime end) {
         JsonObject entity = Json.createObjectBuilder()
                 .add("string", name)
                 .add("start", start.toString())
                 .add("end", end.toString())
+                .build();
+
+        return requestCreateVerify(entity, date.toString(), "day-time-events");
+    }
+
+    // for testing invalid values
+    public URI createDayTimeEvent(String name, LocalDate date, String start, String end) {
+        JsonObject entity = Json.createObjectBuilder()
+                .add("string", name)
+                .add("start", start)
+                .add("end", end)
                 .build();
 
         return requestCreateVerify(entity, date.toString(), "day-time-events");
@@ -790,12 +818,12 @@ public class DayCaptainSystem {
         getWeek(week).tasks.forEach(this::deleteTask);
     }
 
-    public void deleteDayTimeEvents(LocalDate date) {
-        getDay(date).timeEvents.forEach(this::deleteDayTimeEvent);
+    public void deleteDayTimeEvents(LocalDate... dates) {
+        Stream.of(dates).forEach(date -> getDay(date).timeEvents.forEach(this::deleteDayTimeEvent));
     }
 
-    public void deleteDayEvents(LocalDate date) {
-        getDay(date).dayEvents.forEach(this::deleteDayEvent);
+    public void deleteDayEvents(LocalDate... dates) {
+        Stream.of(dates).forEach(date -> getDay(date).dayEvents.forEach(this::deleteDayEvent));
     }
 
     public void deleteBacklogs(String name) {
