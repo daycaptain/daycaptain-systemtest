@@ -12,6 +12,10 @@ import static com.daycaptain.systemtest.frontend.views.View.press;
 
 public class DayEventList extends ListElement {
 
+    public DayEventList() {
+        super("day-events", "day-event");
+    }
+
     public CreateDayTimeEventAction create() {
         press("nn");
         return new CreateDayTimeEventAction();
@@ -29,13 +33,13 @@ public class DayEventList extends ListElement {
     }
 
     public List<ListItem> getList() {
-        return $$("day-events day-event").stream()
+        return $$(selector()).stream()
                 .map(ListItem::fromElement)
                 .collect(Collectors.toList());
     }
 
     public List<String> getNames() {
-        return $$("day-events day-event").texts();
+        return $$(selector()).texts();
     }
 
 }

@@ -44,8 +44,8 @@ public class DeleteDayTaskUITest {
 
     @Test
     void delete() {
-        dayTasks.create("Task 1");
-        dayTasks.create("Task 2");
+        dayTasks.createSave("Task 1");
+        dayTasks.createSave("Task 2");
         dayTasks.delete(1);
         assertThat(dayTasks.getNames()).containsExactly("Task 1");
     }

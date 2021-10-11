@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class DayView extends DynamicView {
 
     public DayEventList dayEvents() {
-        shiftPress("t");
+        shiftPress("r");
         return new DayEventList();
     }
 

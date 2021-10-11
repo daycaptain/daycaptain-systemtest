@@ -1,5 +1,6 @@
 package com.daycaptain.systemtest.frontend.elements;
 
+import com.codeborne.selenide.SelenideElement;
 import com.daycaptain.systemtest.frontend.actions.CreateAction;
 import com.daycaptain.systemtest.frontend.actions.EditInformationAction;
 import com.daycaptain.systemtest.frontend.entity.ListItem;
@@ -7,10 +8,20 @@ import com.daycaptain.systemtest.frontend.views.DynamicView;
 
 import java.util.List;
 
-import static com.daycaptain.systemtest.frontend.views.View.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.daycaptain.systemtest.frontend.views.View.altPress;
+import static com.daycaptain.systemtest.frontend.views.View.press;
 import static java.lang.Math.abs;
 
 public abstract class ListElement {
+
+    protected final String listCssSelector;
+    protected final String itemCssSelector;
+
+    public ListElement(String listCssSelector, String itemCssSelector) {
+        this.listCssSelector = listCssSelector;
+        this.itemCssSelector = itemCssSelector;
+    }
 
     public void select(int index) {
         select(index, false);
@@ -24,7 +35,7 @@ public abstract class ListElement {
         }
     }
 
-    public void create(String name) {
+    public void createSave(String name) {
         CreateAction createAction = create();
         createAction.setName(name);
         createAction.save();
@@ -59,6 +70,16 @@ public abstract class ListElement {
         DynamicView.waitForLoading();
     }
 
+    public SelenideElement hover(int index) {
+        SelenideElement element = $(selector() + ":nth-of-type(" + (index + 1) + ")");
+        element.hover();
+        return element;
+    }
+
     public abstract List<? extends ListItem> getList();
+
+    protected String selector() {
+        return listCssSelector + ' ' + itemCssSelector;
+    }
 
 }

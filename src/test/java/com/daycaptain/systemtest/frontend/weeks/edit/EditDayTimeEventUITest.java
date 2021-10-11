@@ -32,7 +32,7 @@ public class EditDayTimeEventUITest {
 
     @Test
     void startEndTime() {
-        events.create("New task");
+        events.createSave("New task");
         EditTimeEventAction editTimeEventAction = events.edit(0);
         editTimeEventAction.setStartTime("14:00");
         editTimeEventAction.setEndTime("16:00");

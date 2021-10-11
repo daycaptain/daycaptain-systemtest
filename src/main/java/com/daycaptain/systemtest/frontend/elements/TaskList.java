@@ -1,10 +1,11 @@
 package com.daycaptain.systemtest.frontend.elements;
 
+import com.codeborne.selenide.SelenideElement;
 import com.daycaptain.systemtest.frontend.actions.AddRelationAction;
+import com.daycaptain.systemtest.frontend.actions.ConfirmAction;
 import com.daycaptain.systemtest.frontend.actions.CreateTaskAction;
 import com.daycaptain.systemtest.frontend.actions.EditTaskAction;
 import com.daycaptain.systemtest.frontend.entity.Task;
-import com.daycaptain.systemtest.frontend.views.DynamicView;
 import org.openqa.selenium.Keys;
 
 import java.util.List;
@@ -12,17 +13,17 @@ import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.CollectionCondition.anyMatch;
 import static com.codeborne.selenide.Condition.focused;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
+import static com.daycaptain.systemtest.frontend.views.DynamicView.waitForLoading;
 import static com.daycaptain.systemtest.frontend.views.View.press;
 import static com.daycaptain.systemtest.frontend.views.View.shiftPress;
 import static java.lang.Math.abs;
 
 public class TaskList extends ListElement {
 
-    private final String cssSelector;
-
     public TaskList(String cssSelector) {
-        this.cssSelector = cssSelector;
+        super(cssSelector, "dp-task");
     }
 
     public CreateTaskAction create() {
@@ -58,39 +59,39 @@ public class TaskList extends ListElement {
         // why is there a max?
         String keys = useJump ? abs(timeUnits) + moveDirectionKey : moveDirectionKey.repeat(Math.max(0, abs(timeUnits)));
         shiftPress(keys);
-        DynamicView.waitForLoading();
+        waitForLoading();
     }
 
     public void finish(int index) {
         select(index);
         press(Keys.ENTER);
-        DynamicView.waitForLoading();
+        waitForLoading();
     }
 
     public void undoStatus(int index) {
         select(index);
         press(Keys.BACK_SPACE);
-        DynamicView.waitForLoading();
+        waitForLoading();
     }
 
     public void cancel(int index) {
         select(index);
         press("x");
-        DynamicView.waitForLoading();
+        waitForLoading();
     }
 
     public List<Task> getList() {
-        return $$(cssSelector + " dp-task").stream()
+        return $$(selector()).stream()
                 .map(Task::fromElement)
                 .collect(Collectors.toList());
     }
 
     public List<String> getNames() {
-        return $$(cssSelector + " dp-task name").texts();
+        return $$(selector() + " name").texts();
     }
 
     public Task focused() {
-        $$("dp-task").should(anyMatch("Either of the elements has to be focused", el -> $(el).is(focused)));
+        $$(itemCssSelector).should(anyMatch("Either of the elements has to be focused", el -> $(el).is(focused)));
         return Task.fromElement($(getFocusedElement()));
     }
 
@@ -100,6 +101,13 @@ public class TaskList extends ListElement {
         AddRelationAction action = new AddRelationAction();
         action.setSearchTerm(name);
         action.save();
+    }
+
+    public void clickDelete(int index) {
+        SelenideElement element = hover(index);
+        element.$("button.delete").shouldBe(visible).click();
+        new ConfirmAction().confirm();
+        waitForLoading();
     }
 
 }

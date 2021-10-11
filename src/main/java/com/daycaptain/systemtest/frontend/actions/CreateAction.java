@@ -1,7 +1,10 @@
 package com.daycaptain.systemtest.frontend.actions;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
 
+import static com.codeborne.selenide.Condition.matchText;
+import static com.codeborne.selenide.Condition.visible;
 import static com.daycaptain.systemtest.frontend.views.View.press;
 
 public class CreateAction extends Action {
@@ -12,6 +15,18 @@ public class CreateAction extends Action {
         for (int i = 0; i < oldTitle.length(); i++)
             press(Keys.BACK_SPACE);
         press(name + Keys.ESCAPE);
+    }
+
+    public void setAreaClick(String name) {
+        SelenideElement areaSelector = overlay.$("area-selector");
+        // project needs to be cleared first
+        areaSelector.click();
+        areaSelector.$("result-list").shouldBe(visible);
+        areaSelector.$$("result-item").filter(matchText("No area")).first().click();
+
+        areaSelector.click();
+        areaSelector.$$("result-item").filter(matchText(name)).first().click();
+        areaSelector.$("result-list").shouldNotBe(visible);
     }
 
     public void setArea(String areaKeyCode) {
@@ -26,6 +41,18 @@ public class CreateAction extends Action {
     public void setProject(String name) {
         press(Keys.ESCAPE + ",");
         press(name + Keys.ENTER + Keys.ESCAPE);
+    }
+
+    public void setProjectClick(String name) {
+        SelenideElement projectSelector = overlay.$("project-selector");
+        // project needs to be cleared first
+        projectSelector.click();
+        projectSelector.$("result-list").shouldBe(visible);
+        projectSelector.$$("result-item").filter(matchText("No project")).first().click();
+
+        projectSelector.click();
+        projectSelector.$$("result-item").filter(matchText(name)).first().click();
+        projectSelector.$("result-list").shouldNotBe(visible);
     }
 
     public void setNote(String note) {

@@ -44,8 +44,8 @@ public class DeleteDayTimeEventUITest {
 
     @Test
     void deleteWithEqualStartTime() {
-        dayTimeEvents.create("Task 1");
-        dayTimeEvents.create("Task 2");
+        dayTimeEvents.createSave("Task 1");
+        dayTimeEvents.createSave("Task 2");
         dayTimeEvents.delete(1);
         // is this desired behaviour?
         assertThat(dayTimeEvents.getNames()).containsExactly("Task 2");

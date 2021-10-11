@@ -38,10 +38,10 @@ public class WeekTaskListUITest {
 
     @Test
     void moveTask() {
-        weekTasks.create("Task 1");
-        weekTasks.create("Task 2");
-        weekTasks.create("Task 3");
-        weekTasks.create("Task 4");
+        weekTasks.createSave("Task 1");
+        weekTasks.createSave("Task 2");
+        weekTasks.createSave("Task 3");
+        weekTasks.createSave("Task 4");
         weekTasks.move(3, -2);
         weekTasks.move(0, 2);
         assertThat(weekTasks.getNames()).containsExactly("Task 4", "Task 2", "Task 1", "Task 3");
@@ -49,10 +49,10 @@ public class WeekTaskListUITest {
 
     @Test
     void moveTaskWithJump() {
-        weekTasks.create("Task 1");
-        weekTasks.create("Task 2");
-        weekTasks.create("Task 3");
-        weekTasks.create("Task 4");
+        weekTasks.createSave("Task 1");
+        weekTasks.createSave("Task 2");
+        weekTasks.createSave("Task 3");
+        weekTasks.createSave("Task 4");
         weekTasks.move(3, -2, true);
         weekTasks.move(0, 2, true);
         assertThat(weekTasks.getNames()).containsExactly("Task 4", "Task 2", "Task 1", "Task 3");
@@ -60,7 +60,7 @@ public class WeekTaskListUITest {
 
     @Test
     void plannedTime() {
-        weekTasks.create("Task 1");
+        weekTasks.createSave("Task 1");
         weekTasks.editPlannedTime(0, 8);
         weekTasks.editPlannedTime(0, -2);
         assertThat(weekTasks.getList().get(0).plannedTime).isEqualTo(3.0);
@@ -69,7 +69,7 @@ public class WeekTaskListUITest {
     // is this expected behaviour? the jump version adds a whole hour
     @Test
     void plannedTimeWithJump() {
-        weekTasks.create("Task 1");
+        weekTasks.createSave("Task 1");
         weekTasks.editPlannedTime(0, 8, true);
         weekTasks.editPlannedTime(0, -2, true);
         assertThat(weekTasks.getList().get(0).plannedTime).isEqualTo(6.0);
@@ -77,7 +77,7 @@ public class WeekTaskListUITest {
 
     @Test
     void finishTask() {
-        weekTasks.create("Task 1");
+        weekTasks.createSave("Task 1");
         weekTasks.finish(0);
         Task task = weekTasks.getList().get(0);
         assertThat(task.string).isEqualTo("Task 1");
@@ -86,14 +86,14 @@ public class WeekTaskListUITest {
 
     @Test
     void cancelTask() {
-        weekTasks.create("Task 1");
+        weekTasks.createSave("Task 1");
         weekTasks.cancel(0);
         assertThat(weekTasks.getList().get(0).status).isEqualTo("CANCELLED");
     }
 
     @Test
     void undoTaskStatus() {
-        weekTasks.create("Task 1");
+        weekTasks.createSave("Task 1");
         weekTasks.cancel(0);
         weekTasks.undoStatus(0);
         assertThat(weekTasks.getList().get(0).status).isEqualTo("OPEN");

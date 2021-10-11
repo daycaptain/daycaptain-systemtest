@@ -43,7 +43,7 @@ public class MultipleTabUpdateUITest {
 
         switchTo().window(0);
         refresh();
-        dayCaptain.day().tasks().create("Hello");
+        dayCaptain.day().tasks().createSave("Hello");
         int size = day.tasks().getList().size();
 
         switchTo().window(1);

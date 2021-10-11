@@ -37,8 +37,8 @@ public class DeleteWeekTaskUITest {
 
     @Test
     void delete() {
-        weekTasks.create("Task 1");
-        weekTasks.create("Task 2");
+        weekTasks.createSave("Task 1");
+        weekTasks.createSave("Task 2");
         weekTasks.delete(1);
         assertThat(weekTasks.getNames()).containsExactly("Task 1");
     }

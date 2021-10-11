@@ -9,6 +9,7 @@ import static com.codeborne.selenide.Condition.ownText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
 import static com.daycaptain.systemtest.frontend.views.View.press;
+import static com.daycaptain.systemtest.frontend.views.View.waitFor;
 
 public class EditTimeEventAction extends EditInformationAction {
 
@@ -22,10 +23,24 @@ public class EditTimeEventAction extends EditInformationAction {
         press(Keys.ESCAPE);
     }
 
+    public void setStartTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE + "t");
+        actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
+        press(Keys.ENTER);
+        waitFor(50);
+    }
+
     public void setEndTime(String endTime) {
         press(Keys.ESCAPE + "de");
         actions().pause(50).sendKeys(endTime).pause(50).perform();
         press(Keys.ESCAPE);
+    }
+
+    public void setEndTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE + "dt");
+        actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
+        press(Keys.ENTER);
+        waitFor(50);
     }
 
     public String getStartTime() {
@@ -48,6 +63,16 @@ public class EditTimeEventAction extends EditInformationAction {
     public void assertTimeZone(ZoneId zone) {
         press(Keys.ESCAPE);
         overlay.$(".time-zone-label").shouldHave(ownText(zone.toString()));
+    }
+
+    public void assertStartTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE);
+        overlay.$("zone-selector.start-zone name").shouldHave(ownText(zone.toString()));
+    }
+
+    public void assertEndTimeZone(ZoneId zone) {
+        press(Keys.ESCAPE);
+        overlay.$("zone-selector.end-zone name").shouldHave(ownText(zone.toString()));
     }
 
 }

@@ -4,12 +4,9 @@ import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.frontend.DayCaptainUI;
 import com.daycaptain.systemtest.frontend.actions.CreateDayTimeEventAction;
 import com.daycaptain.systemtest.frontend.views.DayView;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 import static com.daycaptain.systemtest.Times.*;
 
@@ -23,7 +20,7 @@ public class DayTimeEventTimeZoneUITest {
     void detect_last_time_zone_empty_day() {
         DayView day = dayCaptain.day(date);
 
-        create(day, "New event", "10:00", "12:00", berlin, moscow);
+        day.timeEvents().createSave("New event", berlin, moscow, "10:00", "12:00");
         day.nextDay();
 
         CreateDayTimeEventAction action = day.timeEvents().create();
@@ -35,9 +32,9 @@ public class DayTimeEventTimeZoneUITest {
     void detect_previous_time_zone_switch_within_day() {
         DayView day = dayCaptain.day(date);
 
-        create(day, "To Moscow", "02:00", "04:00", berlin, moscow);
-        create(day, "To Lisbon", "06:00", "10:00", moscow, lisbon);
-        create(day, "To Berlin", "14:00", "16:00", lisbon, berlin);
+        day.timeEvents().createSave("To Moscow", berlin, moscow, "01:30", "04:00");
+        day.timeEvents().createSave("To Lisbon", moscow, lisbon, "06:00", "10:00");
+        day.timeEvents().createSave("To Berlin", lisbon, berlin, "14:00", "16:00");
 
         CreateDayTimeEventAction action = day.timeEvents().create();
         action.setStartTime("01:00");
@@ -55,25 +52,42 @@ public class DayTimeEventTimeZoneUITest {
         action.close();
     }
 
-    private void create(DayView day, String name, String startTime, String endTime, ZoneId startTimeZone, ZoneId endTimeZone) {
-        CreateDayTimeEventAction action = day.timeEvents().create();
-        action.setName(name);
-        action.setStartTimeZone(startTimeZone);
-        action.setEndTimeZone(endTimeZone);
-        action.setStartTime(startTime);
-        action.setEndTime(endTime);
-        action.save();
+    @Test
+    void edit_time_zones() {
+        DayView day = dayCaptain.day(date);
+
+        day.timeEvents().createSave("New event", berlin, berlin, "09:00", "10:00");
+        day.timeEvents().assertEdit("09:00", "10:00", berlin);
+
+        day.timeEvents().editSave(berlin, moscow, "01:30", "04:00");
+        day.timeEvents().assertEdit("01:30", "04:00", berlin, moscow);
+
+        day.timeEvents().editSave(moscow, lisbon, "06:00", "10:00");
+        day.timeEvents().assertEdit("06:00", "10:00", moscow, lisbon);
+
+        day.timeEvents().editSave(lisbon, berlin, "14:00", "16:00");
+        day.timeEvents().assertEdit("14:00", "16:00", lisbon, berlin);
+
+        day.timeEvents().editSave(lisbon, moscow, "10:00", "11:00");
+        day.timeEvents().assertEdit("07:00", "11:00", lisbon, moscow);
+
+        day.timeEvents().editSave("10:00", "14:00", lisbon, moscow);
+        day.timeEvents().assertEdit("10:00", "14:00", lisbon, moscow);
+    }
+
+    @BeforeEach
+    @AfterEach
+    void cleanUp() {
+        system.deleteDayTimeEvents(date, date.plusDays(1));
     }
 
     @BeforeAll
     static void beforeAll() {
         dayCaptain.initWithLogin();
-        system.deleteDayTimeEvents(date, date.plusDays(1));
     }
 
     @AfterAll
     static void afterAll() {
-        system.deleteDayTimeEvents(date, date.plusDays(1));
         dayCaptain.close();
     }
 

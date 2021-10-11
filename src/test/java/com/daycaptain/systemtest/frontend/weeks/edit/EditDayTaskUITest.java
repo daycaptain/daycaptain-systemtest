@@ -32,7 +32,7 @@ public class EditDayTaskUITest {
 
     @Test
     void plannedTime() {
-        tasks.create("New task");
+        tasks.createSave("New task");
         EditTaskAction editTaskAction = tasks.edit(0);
         editTaskAction.setPlannedTime(6, false);
         editTaskAction.setPlannedTime(-2, true);

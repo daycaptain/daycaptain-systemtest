@@ -44,10 +44,10 @@ public class DayTaskListUITest {
 
     @Test
     void moveTask() {
-        dayTasks.create("Task 1");
-        dayTasks.create("Task 2");
-        dayTasks.create("Task 3");
-        dayTasks.create("Task 4");
+        dayTasks.createSave("Task 1");
+        dayTasks.createSave("Task 2");
+        dayTasks.createSave("Task 3");
+        dayTasks.createSave("Task 4");
         dayTasks.move(3, -2);
         dayTasks.move(0, 2);
         assertThat(dayTasks.getNames()).containsExactly("Task 4", "Task 2", "Task 1", "Task 3");
@@ -55,10 +55,10 @@ public class DayTaskListUITest {
 
     @Test
     void moveTaskWithJump() {
-        dayTasks.create("Task 1");
-        dayTasks.create("Task 2");
-        dayTasks.create("Task 3");
-        dayTasks.create("Task 4");
+        dayTasks.createSave("Task 1");
+        dayTasks.createSave("Task 2");
+        dayTasks.createSave("Task 3");
+        dayTasks.createSave("Task 4");
         dayTasks.move(3, -2, true);
         dayTasks.move(0, 2, true);
         assertThat(dayTasks.getNames()).containsExactly("Task 4", "Task 2", "Task 1", "Task 3");
@@ -66,7 +66,7 @@ public class DayTaskListUITest {
 
     @Test
     void assignPlannedTime() {
-        dayTasks.create("Task 1");
+        dayTasks.createSave("Task 1");
         dayTasks.editPlannedTime(0, 8);
         dayTasks.editPlannedTime(0, -2);
         EditTaskAction editTaskAction = dayTasks.edit(0);
@@ -77,7 +77,7 @@ public class DayTaskListUITest {
     // is this expected behaviour? the jump version adds a whole hour
     @Test
     void assignPlannedTimeWithJump() {
-        dayTasks.create("Task 1");
+        dayTasks.createSave("Task 1");
         dayTasks.editPlannedTime(0, 8, true);
         dayTasks.editPlannedTime(0, -2, true);
         EditTaskAction editTaskAction = dayTasks.edit(0);
@@ -87,7 +87,7 @@ public class DayTaskListUITest {
 
     @Test
     void finishTask() {
-        dayTasks.create("Task 1");
+        dayTasks.createSave("Task 1");
         dayTasks.finish(0);
         Task task = dayTasks.getList().get(0);
         assertThat(task.string).isEqualTo("Task 1");
@@ -96,14 +96,14 @@ public class DayTaskListUITest {
 
     @Test
     void cancelTask() {
-        dayTasks.create("Task 1");
+        dayTasks.createSave("Task 1");
         dayTasks.cancel(0);
         assertThat(dayTasks.getList().get(0).status).isEqualTo("CANCELLED");
     }
 
     @Test
     void undoTaskStatus() {
-        dayTasks.create("Task 1");
+        dayTasks.createSave("Task 1");
         dayTasks.cancel(0);
         dayTasks.undoStatus(0);
         assertThat(dayTasks.getList().get(0).status).isEqualTo("OPEN");

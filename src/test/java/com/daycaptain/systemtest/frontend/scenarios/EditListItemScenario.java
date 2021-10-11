@@ -41,7 +41,7 @@ public class EditListItemScenario {
 
     void name() {
         ListElement listElement = elementSupplier.get();
-        listElement.create("New item");
+        listElement.createSave("New item");
         EditInformationAction editAction = listElement.edit(0);
         editAction.setName("Edited item name");
         editAction.save();
@@ -59,7 +59,7 @@ public class EditListItemScenario {
 
     void abort() {
         ListElement listElement = elementSupplier.get();
-        listElement.create("New item");
+        listElement.createSave("New item");
         EditInformationAction editAction = listElement.edit(0);
         editAction.setName("Edited item name");
         editAction.close();
@@ -77,7 +77,7 @@ public class EditListItemScenario {
 
     void area() {
         ListElement listElement = elementSupplier.get();
-        listElement.create("New item");
+        listElement.createSave("New item");
         EditInformationAction editAction = listElement.edit(0);
         editAction.setArea(areaKeyCode);
         editAction.save();
@@ -95,7 +95,7 @@ public class EditListItemScenario {
 
     void projectWithArea() {
         ListElement listElement = elementSupplier.get();
-        listElement.create("New item");
+        listElement.createSave("New item");
         EditInformationAction editAction = listElement.edit(0);
         editAction.setProject(projectWithArea);
         editAction.save();
@@ -113,7 +113,7 @@ public class EditListItemScenario {
 
     void projectWithoutArea() {
         ListElement listElement = elementSupplier.get();
-        listElement.create("New item");
+        listElement.createSave("New item");
         EditInformationAction editAction = listElement.edit(0);
         editAction.setProject(projectWithoutArea);
         editAction.save();
@@ -131,7 +131,7 @@ public class EditListItemScenario {
 
     void note() {
         ListElement listElement = elementSupplier.get();
-        listElement.create("New item");
+        listElement.createSave("New item");
         EditInformationAction editAction = listElement.edit(0);
         editAction.setNote("This is a note");
         editAction.save();
