@@ -508,6 +508,12 @@ public class DayCaptainSystem {
         return getActionId(response);
     }
 
+    public String deleteDayTimeEvent(DayTimeEvent event, String recurring) {
+        Response response = requestDelete(event._self, recurring);
+        verifySuccess(response);
+        return getActionId(response);
+    }
+
     public String deleteDayEvent(DayEvent event) {
         Response response = requestDelete(event._self);
         verifySuccess(response);
@@ -864,6 +870,13 @@ public class DayCaptainSystem {
 
     private Response requestDelete(URI uri) {
         return client.target(uri)
+                .request()
+                .delete();
+    }
+
+    private Response requestDelete(URI uri, String recurring) {
+        return client.target(uri)
+                .queryParam("recurring", recurring)
                 .request()
                 .delete();
     }

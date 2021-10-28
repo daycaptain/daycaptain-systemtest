@@ -3,6 +3,7 @@ package com.daycaptain.systemtest.frontend.days;
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.frontend.DayCaptainUI;
 import com.daycaptain.systemtest.frontend.actions.CreateDayTimeEventAction;
+import com.daycaptain.systemtest.frontend.actions.EditTimeEventAction;
 import com.daycaptain.systemtest.frontend.views.DayView;
 import org.junit.jupiter.api.*;
 
@@ -73,6 +74,25 @@ public class DayTimeEventTimeZoneUITest {
 
         day.timeEvents().editSave("10:00", "14:00", lisbon, moscow);
         day.timeEvents().assertEdit("10:00", "14:00", lisbon, moscow);
+    }
+
+    @Test
+    void edit_only_time_zone() {
+        DayView day = dayCaptain.day(date);
+
+        day.timeEvents().createSave("New event", berlin, berlin, "09:00", "10:00");
+        day.timeEvents().assertEdit("09:00", "10:00", berlin);
+
+        EditTimeEventAction edit = day.timeEvents().edit();
+        edit.setEndTimeZone(moscow);
+        edit.save();
+
+        day.timeEvents().assertEdit("09:00", "12:00", berlin, moscow);
+
+        edit = day.timeEvents().edit();
+        edit.setStartTimeZone(moscow);
+        edit.save();
+        day.timeEvents().assertEdit("09:00", "12:00", moscow, moscow);
     }
 
     @BeforeEach

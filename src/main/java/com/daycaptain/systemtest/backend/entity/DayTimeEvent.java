@@ -12,6 +12,7 @@ public class DayTimeEvent {
     public String project;
     public String relatedProject;
     public String note;
+    public boolean recurring;
     public URI assignedFromTask;
     public URI _self;
 
