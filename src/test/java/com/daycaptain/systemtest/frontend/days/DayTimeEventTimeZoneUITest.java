@@ -95,6 +95,25 @@ public class DayTimeEventTimeZoneUITest {
         day.timeEvents().assertEdit("09:00", "12:00", moscow, moscow);
     }
 
+    @Test
+    void switch_single_time_zone() {
+        DayView day = dayCaptain.day(date);
+
+        day.timeEvents().createSave("New event", berlin, "09:00", "10:00");
+        day.timeEvents().assertEdit("09:00", "10:00", berlin);
+
+        EditTimeEventAction edit = day.timeEvents().edit();
+        edit.setZones(moscow);
+        edit.save();
+
+        day.timeEvents().assertEdit("11:00", "12:00", moscow);
+
+        edit = day.timeEvents().edit();
+        edit.setZones(berlin);
+        edit.save();
+        day.timeEvents().assertEdit("09:00", "10:00", berlin);
+    }
+
     @BeforeEach
     @AfterEach
     void cleanUp() {

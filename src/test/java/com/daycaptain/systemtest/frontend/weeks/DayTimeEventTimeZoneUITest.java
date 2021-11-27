@@ -103,6 +103,26 @@ public class DayTimeEventTimeZoneUITest {
         assertEdit(weekView, "09:00", "12:00", moscow, moscow);
     }
 
+    @Test
+    void switch_single_time_zone() {
+        WeekView weekView = dayCaptain.week(week);
+        weekView.dayTimeEvents(DayOfWeek.TUESDAY);
+
+        weekView.dayTimeEventsOffset(0).createSave("New event", berlin, "09:00", "10:00");
+        assertEdit(weekView, "09:00", "10:00", berlin);
+
+        EditTimeEventAction edit = weekView.dayTimeEventsOffset(0).edit();
+        edit.setZones(moscow);
+        edit.save();
+
+        assertEdit(weekView, "11:00", "12:00", moscow);
+
+        edit = weekView.dayTimeEventsOffset(0).edit();
+        edit.setZones(berlin);
+        edit.save();
+        assertEdit(weekView, "09:00", "10:00", berlin);
+    }
+
     private void assertEdit(WeekView week, String startTime, String endTime, ZoneId zones) {
         EditTimeEventAction action = week.dayTimeEventsOffset(0).edit();
         assertThat(action.getStartTime()).isEqualTo(startTime);

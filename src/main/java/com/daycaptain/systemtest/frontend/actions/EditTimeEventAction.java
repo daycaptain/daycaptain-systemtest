@@ -8,13 +8,19 @@ import java.util.List;
 import static com.codeborne.selenide.Condition.ownText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
-import static com.daycaptain.systemtest.frontend.views.View.press;
-import static com.daycaptain.systemtest.frontend.views.View.waitFor;
+import static com.daycaptain.systemtest.frontend.views.View.*;
 
 public class EditTimeEventAction extends EditInformationAction {
 
     public EditTimeEventAction() {
         waitForLoading();
+    }
+
+    public void setZones(ZoneId zone) {
+        press(Keys.ESCAPE + "t");
+        actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
+        press(Keys.ENTER);
+        waitFor(50);
     }
 
     public void setStartTime(String startTime) {
@@ -24,7 +30,8 @@ public class EditTimeEventAction extends EditInformationAction {
     }
 
     public void setStartTimeZone(ZoneId zone) {
-        press(Keys.ESCAPE + "t");
+        press(Keys.ESCAPE);
+        shiftPress("t");
         actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
         press(Keys.ENTER);
         waitFor(50);
@@ -37,7 +44,8 @@ public class EditTimeEventAction extends EditInformationAction {
     }
 
     public void setEndTimeZone(ZoneId zone) {
-        press(Keys.ESCAPE + "dt");
+        press(Keys.ESCAPE + "d");
+        shiftPress("t");
         actions().pause(50).sendKeys(zone.toString()).pause(50).perform();
         press(Keys.ENTER);
         waitFor(50);
@@ -62,7 +70,7 @@ public class EditTimeEventAction extends EditInformationAction {
 
     public void assertTimeZone(ZoneId zone) {
         press(Keys.ESCAPE);
-        overlay.$(".time-zone-label").shouldHave(ownText(zone.toString()));
+        overlay.$("zone-selector.zones name").shouldHave(ownText(zone.toString()));
     }
 
     public void assertStartTimeZone(ZoneId zone) {

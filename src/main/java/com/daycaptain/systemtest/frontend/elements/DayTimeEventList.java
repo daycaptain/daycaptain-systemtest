@@ -34,6 +34,15 @@ public class DayTimeEventList extends ListElement {
         action.save();
     }
 
+    public void createSave(String name, ZoneId zones, String startTime, String endTime) {
+        CreateDayTimeEventAction action = create();
+        action.setName(name);
+        action.setZones(zones);
+        action.setStartTime(startTime);
+        action.setEndTime(endTime);
+        action.save();
+    }
+
     public void createSave(String name, ZoneId startTimeZone, ZoneId endTimeZone, String startTime, String endTime) {
         CreateDayTimeEventAction action = create();
         action.setName(name);
