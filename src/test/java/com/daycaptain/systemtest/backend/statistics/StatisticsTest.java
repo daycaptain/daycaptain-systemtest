@@ -1,5 +1,6 @@
 package com.daycaptain.systemtest.backend.statistics;
 
+import com.daycaptain.systemtest.Times;
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.backend.entity.Day;
 import com.daycaptain.systemtest.backend.entity.Task;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,11 +69,11 @@ public class StatisticsTest {
     }
 
     private LocalDateTime timeHour(int hour) {
-        return LocalDateTime.of(DATE, LocalTime.of(hour, 0));
+        return Times.time(DATE, hour);
     }
 
     private LocalDateTime time(int hour, int minute) {
-        return LocalDateTime.of(DATE, LocalTime.of(hour, minute));
+        return Times.time(DATE, hour, minute);
     }
 
 }

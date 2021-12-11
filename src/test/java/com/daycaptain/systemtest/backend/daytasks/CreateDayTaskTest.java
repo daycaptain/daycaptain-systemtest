@@ -3,6 +3,7 @@ package com.daycaptain.systemtest.backend.daytasks;
 import com.daycaptain.systemtest.backend.CollectionUtils;
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.backend.entity.Task;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.threeten.extra.YearWeek;
 
@@ -20,6 +21,8 @@ public class CreateDayTaskTest {
     @Test
     void testCreateDayTask() {
         LocalDate date = LocalDate.of(2020, 5, 9);
+
+        dayCaptain.registerCountUpdates();
         URI taskId = dayCaptain.createDayTask("New task", date);
         assertThat(taskId).isNotNull();
 
@@ -32,6 +35,7 @@ public class CreateDayTaskTest {
         assertThat(task.area).isNull();
         assertThat(task.relatedProject).isNull();
         assertThat(task.relatedArea).isNull();
+        assertThat(dayCaptain.getRegisteredUpdates()).isOne();
 
         assertThat(tasks.size()).isGreaterThan(2);
         assertThat(task.priority).isEqualTo(tasks.size());
@@ -127,6 +131,11 @@ public class CreateDayTaskTest {
         assertThat(task.area).isNull();
         assertThat(task.relatedProject).isNull();
         assertThat(task.relatedArea).isNull();
+    }
+
+    @AfterEach
+    void tearDown() {
+        dayCaptain.close();
     }
 
 }

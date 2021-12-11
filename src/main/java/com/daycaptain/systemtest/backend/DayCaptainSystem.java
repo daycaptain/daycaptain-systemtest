@@ -12,6 +12,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.sse.InboundSseEvent;
+import javax.ws.rs.sse.SseEventSource;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,12 +22,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class DayCaptainSystem {
 
     private final Client client;
     private final WebTarget rootTarget;
+    private SseEventSource updateSource;
+    private int updateCounter;
 
     public DayCaptainSystem() {
         // required for PATCH
@@ -196,6 +201,12 @@ public class DayCaptainSystem {
         if (queryParam != null)
             target = target.queryParam(queryParam, queryValue);
         return target.request(MediaType.APPLICATION_JSON_TYPE).get();
+    }
+
+    public DayEvent getDayEvent(URI uri) {
+        Response response = request(uri);
+        verifySuccess(response);
+        return response.readEntity(DayEvent.class);
     }
 
     public DayTimeEvent getDayTimeEvent(URI uri) {
@@ -919,6 +930,50 @@ public class DayCaptainSystem {
                 .request()
                 .post(Entity.json(Json.createObjectBuilder().add("actionId", actionId).build()));
         verifySuccess(response);
+    }
+
+    public void registerCountUpdates() {
+        updateCounter = 0;
+        registerForUpdates(() -> updateCounter++);
+    }
+
+    public int getRegisteredUpdates() {
+        return updateCounter;
+    }
+
+    public void registerForUpdates(Runnable onUpdate) {
+        registerForUpdates(ev -> {
+            if (".".equals(ev.readData()))
+                onUpdate.run();
+        });
+    }
+
+    public void registerForUpdates(Runnable onUpdate, Consumer<String> onMessage) {
+        registerForUpdates(ev -> {
+            String data = ev.readData();
+            if (".".equals(data))
+                onUpdate.run();
+            else
+                onMessage.accept(data);
+        });
+    }
+
+    private void registerForUpdates(Consumer<InboundSseEvent> eventConsumer) {
+        if (updateSource == null) {
+            updateSource = SseEventSource.target(rootTarget.path("user/updates"))
+                    .build();
+        }
+        updateSource.register(eventConsumer, thr -> {
+            System.err.println("Error in SSE updates");
+            throw new RuntimeException(thr);
+        });
+
+        updateSource.open();
+    }
+
+    public void close() {
+        if (updateSource != null)
+            updateSource.close();
     }
 
 }
