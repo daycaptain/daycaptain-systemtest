@@ -14,13 +14,14 @@ public class DeleteBacklogItemUITest {
     private static final DayCaptainSystem system = new DayCaptainSystem();
     private static final DayCaptainUI dayCaptain = new DayCaptainUI();
     private BacklogItemList itemList;
+    private BacklogsView backlogs;
 
     @BeforeEach
     void beforeEach() {
         cleanUp();
+        dayCaptain.day();
         system.createBacklog("DeleteBacklogItemUITest");
-
-        BacklogsView backlogs = dayCaptain.backlogs();
+        backlogs = dayCaptain.backlogs();
         backlogs.backlogList().selectLast();
         itemList = backlogs.backlogItemList();
         itemList.createSave("Task 1");
@@ -37,14 +38,14 @@ public class DeleteBacklogItemUITest {
     void delete_in_task_list() {
         itemList.delete(1);
 
-        assertThat(itemList.getNames()).containsSequence("Task 1", "Task 3");
+        assertThat(backlogs.backlogItemList().getNames()).containsSequence("Task 1", "Task 3");
     }
 
     @Test
     void delete_in_task_list_click() {
         itemList.clickDelete(1);
 
-        assertThat(itemList.getNames()).containsSequence("Task 1", "Task 3");
+        assertThat(backlogs.backlogItemList().getNames()).containsSequence("Task 1", "Task 3");
     }
 
     @Test
@@ -52,7 +53,7 @@ public class DeleteBacklogItemUITest {
         EditBacklogItemAction edit = itemList.edit(1);
 
         edit.clickDelete();
-        assertThat(itemList.getNames()).containsSequence("Task 1", "Task 3");
+        assertThat(backlogs.backlogItemList().getNames()).containsSequence("Task 1", "Task 3");
     }
 
     @BeforeAll

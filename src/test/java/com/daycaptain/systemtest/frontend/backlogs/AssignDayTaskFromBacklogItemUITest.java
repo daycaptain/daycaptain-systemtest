@@ -30,7 +30,7 @@ public class AssignDayTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createInboxItem("New backlog item");
-        assertThat(backlogs.getCurrentBacklogItemNames()).last().isEqualTo("New backlog item");
+        backlogs.assertLastBacklogItemName("New backlog item");
 
         backlogs.assignDayTaskFromBacklogItem(backlogs.getCurrentBacklogItemNames().size() - 1, "New day task", 0);
 
@@ -53,7 +53,7 @@ public class AssignDayTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createBacklogItem("New contact item", "To-contact");
-        assertThat(backlogs.getCurrentBacklogItemNames()).last().isEqualTo("New contact item");
+        backlogs.assertLastBacklogItemName("New contact item");
 
         backlogs.assignDayTaskFromBacklogItem(backlogs.getCurrentBacklogItemNames().size() - 1, "New day task", 0);
 
@@ -76,6 +76,7 @@ public class AssignDayTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createInboxItemWithArea("New backlog item", "i");
+        backlogs.assertLastBacklogItemName("New backlog item");
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.string).isEqualTo("New backlog item");
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.hasArea).isEqualTo(true);
 
@@ -102,6 +103,7 @@ public class AssignDayTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createInboxItemWithProject("New backlog item", "Business idea");
+        backlogs.assertLastBacklogItemName("New backlog item");
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.string).isEqualTo("New backlog item");
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.hasArea).isEqualTo(true);
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.project).isEqualTo("Business idea");
@@ -129,7 +131,7 @@ public class AssignDayTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createBacklogItem("New contact item", "IT work");
-        assertThat(backlogs.getCurrentBacklogItemNames()).last().isEqualTo("New contact item");
+        backlogs.assertLastBacklogItemName("New contact item");
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.hasArea).isEqualTo(true);
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.project).isNull();
 
@@ -156,7 +158,7 @@ public class AssignDayTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createBacklogItem("New contact item", "Business idea");
-        assertThat(backlogs.getCurrentBacklogItemNames()).last().isEqualTo("New contact item");
+        backlogs.assertLastBacklogItemName("New contact item");
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.hasArea).isEqualTo(true);
         assertThat(backlogs.getCurrentBacklogItems()).last().extracting(b -> b.project).isEqualTo("Business idea");
 

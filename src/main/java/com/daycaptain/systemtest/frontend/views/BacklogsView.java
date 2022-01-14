@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.CollectionCondition.anyMatch;
 import static com.codeborne.selenide.Condition.focused;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
 public class BacklogsView extends DynamicView {
@@ -41,6 +42,10 @@ public class BacklogsView extends DynamicView {
         return $$("backlog-items backlog-item name").stream()
                 .map(SelenideElement::text)
                 .collect(Collectors.toList());
+    }
+
+    public void assertLastBacklogItemName(String name) {
+        $$("backlog-items backlog-item name").last().shouldHave(text(name));
     }
 
     public List<BacklogItem> getCurrentBacklogItems() {
