@@ -6,6 +6,7 @@ import org.openqa.selenium.Keys;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.daycaptain.systemtest.frontend.views.View.press;
+import static com.daycaptain.systemtest.frontend.views.View.waitFor;
 
 public class ConfirmAction extends Action {
 
@@ -21,6 +22,7 @@ public class ConfirmAction extends Action {
 
     public void confirmClick() {
         overlay.$("button.save").click();
+        waitFor(50);
         DynamicView.waitForLoading();
     }
 

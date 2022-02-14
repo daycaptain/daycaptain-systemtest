@@ -30,7 +30,7 @@ public class AssignWeekTaskFromBacklogItemUITest {
         BacklogsView backlogs = dayCaptain.backlogs();
 
         backlogs.createInboxItem("New backlog item");
-        assertThat(backlogs.getCurrentBacklogItemNames()).last().isEqualTo("New backlog item");
+        backlogs.assertLastBacklogItemName("New backlog item");
 
         backlogs.assignWeekTaskFromBacklogItem(backlogs.getCurrentBacklogItemNames().size() - 1, "New week task", 0);
 

@@ -37,9 +37,25 @@ public class ListBacklogsTest {
         URI second = dayCaptain.createBacklogWithArea("Second", "IT work");
         URI third = dayCaptain.createBacklog("Third");
 
-        List<Backlog> backlogs = dayCaptain.getBacklogs("IT work");
+        List<Backlog> backlogs = dayCaptain.getBacklogsFilterArea("IT work");
         assertThat(backlogs).extracting(b -> b._self).contains(second);
         assertThat(backlogs).extracting(b -> b._self).doesNotContain(first, third);
+    }
+
+    @Test
+    void testListBacklogsFilterProject() {
+        URI first = dayCaptain.createBacklog("First");
+        URI second = dayCaptain.createBacklogWithProject("Second", "Business idea");
+        URI third = dayCaptain.createBacklogWithProject("Third", "Spanish");
+
+        List<Backlog> backlogs = dayCaptain.getBacklogsFilterProject("Business idea");
+        assertThat(backlogs).extracting(b -> b._self).contains(second);
+        assertThat(backlogs).extracting(b -> b._self).doesNotContain(first, third);
+        backlogs = dayCaptain.getBacklogsFilterProject("Spanish");
+        assertThat(backlogs).extracting(b -> b._self).contains(third);
+        assertThat(backlogs).extracting(b -> b._self).doesNotContain(first, second);
+        backlogs = dayCaptain.getBacklogsFilterProject("unknown");
+        assertThat(backlogs).extracting(b -> b.name).containsExactly("INBOX");
     }
 
     @Test

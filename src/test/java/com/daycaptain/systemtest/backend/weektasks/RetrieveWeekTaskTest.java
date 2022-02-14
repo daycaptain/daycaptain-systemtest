@@ -92,10 +92,26 @@ public class RetrieveWeekTaskTest {
         dayCaptain.createWeekTaskWithArea("New task, another area", week, 60, "Business");
 
         assertThat(dayCaptain.getWeek(week).tasks).hasSize(3);
-        assertThat(dayCaptain.getWeek(week, "IT work").tasks).extracting(e -> e.string).containsExactly("New task, area");
-        assertThat(dayCaptain.getWeek(week, "Business").tasks).extracting(e -> e.string).containsExactly("New task, another area");
-        assertThat(dayCaptain.getWeek(week, "Self-improvement").tasks).isEmpty();
-        assertThat(dayCaptain.getWeek(week, "unknown").tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "IT work").tasks).extracting(e -> e.string).containsExactly("New task, area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Business").tasks).extracting(e -> e.string).containsExactly("New task, another area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Self-improvement").tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "unknown").tasks).isEmpty();
+    }
+
+    @Test
+    void testGetWeekTasksFilterProject() {
+        YearWeek week = YearWeek.of(2020, 22);
+        dayCaptain.createWeekTaskWithProject("New task, project", week, 60, "Business idea");
+        dayCaptain.createWeekTask("New task", week);
+        dayCaptain.createWeekTaskWithProject("New task, another project", week, 60, "Spanish");
+
+        assertThat(dayCaptain.getWeek(week).tasks).hasSize(3);
+        assertThat(dayCaptain.getWeekFilterArea(week, "Business").tasks).extracting(e -> e.string).containsExactly("New task, project");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Self-improvement").tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "unknown").tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterProject(week, "Business idea").tasks).extracting(e -> e.string).containsExactly("New task, project");
+        assertThat(dayCaptain.getWeekFilterProject(week, "Spanish").tasks).extracting(e -> e.string).containsExactly("New task, another project");
+        assertThat(dayCaptain.getWeekFilterProject(week, "unknown").tasks).isEmpty();
     }
 
     @AfterEach

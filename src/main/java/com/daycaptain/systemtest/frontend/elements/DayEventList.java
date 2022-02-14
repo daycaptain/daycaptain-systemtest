@@ -12,6 +12,10 @@ import static com.daycaptain.systemtest.frontend.views.View.press;
 
 public class DayEventList extends ListElement {
 
+    public DayEventList(String cssSelector) {
+        super(cssSelector, "day-event");
+    }
+
     public DayEventList() {
         super("day-events", "day-event");
     }

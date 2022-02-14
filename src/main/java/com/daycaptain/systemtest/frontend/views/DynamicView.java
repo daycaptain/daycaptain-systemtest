@@ -4,9 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.daycaptain.systemtest.frontend.actions.DateJump;
 import com.daycaptain.systemtest.frontend.actions.SearchAction;
+import com.daycaptain.systemtest.frontend.actions.SetFilter;
 import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Condition.cssClass;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static java.time.Duration.ofSeconds;
 
@@ -38,6 +39,11 @@ public abstract class DynamicView extends View {
         return new DateJump();
     }
 
+    public SetFilter filter() {
+        press("\\");
+        return new SetFilter();
+    }
+
     public String getPageNote() {
         // might not be available in all views
         return $("dp-note textarea").val();
@@ -51,6 +57,18 @@ public abstract class DynamicView extends View {
         press(note);
         ctrlPress(Keys.ENTER);
         waitForLoading();
+    }
+
+    public void assertAreaFilter(String area) {
+        $("span.filter area-label").shouldHave(exactOwnText(area));
+    }
+
+    public void assertProjectFilter(String area) {
+        $("span.filter project-label").shouldHave(exactOwnText(area));
+    }
+
+    public void assertNoFilter() {
+        $("span.filter").shouldNot(exist);
     }
 
 }

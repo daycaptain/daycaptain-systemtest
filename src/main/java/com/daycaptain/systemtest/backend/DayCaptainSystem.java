@@ -102,8 +102,14 @@ public class DayCaptainSystem {
         return response.readEntity(Week.class);
     }
 
-    public Week getWeek(YearWeek week, String areaFilter) {
+    public Week getWeekFilterArea(YearWeek week, String areaFilter) {
         Response response = requestWeek(week, "area", areaFilter);
+        verifySuccess(response);
+        return response.readEntity(Week.class);
+    }
+
+    public Week getWeekFilterProject(YearWeek week, String projectFilter) {
+        Response response = requestWeek(week, "project", projectFilter);
         verifySuccess(response);
         return response.readEntity(Week.class);
     }
@@ -115,13 +121,19 @@ public class DayCaptainSystem {
     }
 
     public Day getDay(LocalDate date) {
-        Response response = requestDay(date.toString(), null);
+        Response response = requestDay(date.toString());
         verifySuccess(response);
         return response.readEntity(Day.class);
     }
 
-    public Day getDay(LocalDate date, String areaFilter) {
-        Response response = requestDay(date.toString(), areaFilter);
+    public Day getDayFilterArea(LocalDate date, String areaFilter) {
+        Response response = requestDayFilterArea(date.toString(), areaFilter);
+        verifySuccess(response);
+        return response.readEntity(Day.class);
+    }
+
+    public Day getDayFilterProject(LocalDate date, String projectFilter) {
+        Response response = requestDayFilterProject(date.toString(), projectFilter);
         verifySuccess(response);
         return response.readEntity(Day.class);
     }
@@ -133,33 +145,47 @@ public class DayCaptainSystem {
     }
 
     public Backlog getInbox() {
-        Response response = requestInbox(null, false);
+        Response response = requestInbox(null, null, false);
         verifySuccess(response);
         return response.readEntity(Backlog.class);
     }
 
-    public Backlog getInbox(String areaFilter) {
-        Response response = requestInbox(areaFilter, false);
+    public Backlog getInboxFilterArea(String areaFilter) {
+        Response response = requestInbox(areaFilter, null, false);
+        verifySuccess(response);
+        return response.readEntity(Backlog.class);
+    }
+
+    public Backlog getInboxFilterProject(String projectFilter) {
+        Response response = requestInbox(null, projectFilter, false);
         verifySuccess(response);
         return response.readEntity(Backlog.class);
     }
 
     public Backlog getInbox(boolean archived) {
-        Response response = requestInbox(null, archived);
+        Response response = requestInbox(null, null, archived);
         verifySuccess(response);
         return response.readEntity(Backlog.class);
     }
 
     public List<Backlog> getBacklogs() {
-        Response response = requestBacklogs(null);
+        Response response = requestBacklogs(null, null);
         verifySuccess(response);
         GenericType<List<Backlog>> listType = new GenericType<>() {
         };
         return response.readEntity(listType);
     }
 
-    public List<Backlog> getBacklogs(String areaFilter) {
-        Response response = requestBacklogs(areaFilter);
+    public List<Backlog> getBacklogsFilterArea(String areaFilter) {
+        Response response = requestBacklogs(areaFilter, null);
+        verifySuccess(response);
+        GenericType<List<Backlog>> listType = new GenericType<>() {
+        };
+        return response.readEntity(listType);
+    }
+
+    public List<Backlog> getBacklogsFilterProject(String projectFilter) {
+        Response response = requestBacklogs(null, projectFilter);
         verifySuccess(response);
         GenericType<List<Backlog>> listType = new GenericType<>() {
         };
@@ -172,10 +198,19 @@ public class DayCaptainSystem {
         return response.readEntity(Backlog.class);
     }
 
-    public Backlog getBacklog(URI uri, String areaFilter) {
+    public Backlog getBacklogFilterArea(URI uri, String areaFilter) {
         Response response = request(UriBuilder
                 .fromUri(uri)
                 .queryParam("area", areaFilter)
+                .build());
+        verifySuccess(response);
+        return response.readEntity(Backlog.class);
+    }
+
+    public Backlog getBacklogFilterProject(URI uri, String projectFilter) {
+        Response response = request(UriBuilder
+                .fromUri(uri)
+                .queryParam("project", projectFilter)
                 .build());
         verifySuccess(response);
         return response.readEntity(Backlog.class);
@@ -221,26 +256,42 @@ public class DayCaptainSystem {
                 .get();
     }
 
-    private Response requestDay(String date, String areaFilter) {
+    private Response requestDay(String date) {
         WebTarget target = rootTarget.path(date);
-        if (areaFilter != null)
-            target = target.queryParam("area", areaFilter);
         return target.request(MediaType.APPLICATION_JSON_TYPE).get();
     }
 
-    private Response requestInbox(String areaFilter, boolean archived) {
+    private Response requestDayFilterArea(String date, String areaFilter) {
+        return rootTarget
+                .path(date)
+                .queryParam("area", areaFilter)
+                .request(MediaType.APPLICATION_JSON_TYPE).get();
+    }
+
+    private Response requestDayFilterProject(String date, String projectFilter) {
+        return rootTarget
+                .path(date)
+                .queryParam("project", projectFilter)
+                .request(MediaType.APPLICATION_JSON_TYPE).get();
+    }
+
+    private Response requestInbox(String areaFilter, String projectFilter, boolean archived) {
         WebTarget target = rootTarget.path("backlogs/inbox");
         if (areaFilter != null)
             target = target.queryParam("area", areaFilter);
+        if (projectFilter != null)
+            target = target.queryParam("project", projectFilter);
         if (archived)
             target = target.queryParam("archived", "true");
         return target.request(MediaType.APPLICATION_JSON_TYPE).get();
     }
 
-    private Response requestBacklogs(String areaFilter) {
+    private Response requestBacklogs(String areaFilter, String projectFilter) {
         WebTarget target = rootTarget.path("backlogs");
         if (areaFilter != null)
             target = target.queryParam("area", areaFilter);
+        if (projectFilter != null)
+            target = target.queryParam("project", projectFilter);
         return target.request(MediaType.APPLICATION_JSON_TYPE).get();
     }
 

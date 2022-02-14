@@ -1,11 +1,13 @@
 package com.daycaptain.systemtest.frontend.views;
 
+import com.daycaptain.systemtest.frontend.elements.DayEventList;
 import com.daycaptain.systemtest.frontend.elements.DayTimeEventList;
 import com.daycaptain.systemtest.frontend.elements.TaskList;
 import org.openqa.selenium.Keys;
 
 import java.time.DayOfWeek;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.getFocusedElement;
 
@@ -28,6 +30,23 @@ public class WeekView extends DynamicView {
     public void previousWeek() {
         press("gwh");
         waitForLoading();
+    }
+
+    public DayEventList dayEvents(DayOfWeek dayOfWeek) {
+        press("gwR");
+        // doesn't work if week is YearWeek.now()
+        String keySequence = "l".repeat(dayOfWeek.ordinal());
+        press(keySequence);
+        int index = dayOfWeek.ordinal() + 1;
+        return new DayEventList(".week-grid > div:nth-of-type(" + index + ") day-events");
+    }
+
+    public DayEventList dayEventsOffset(int temporalOffset) {
+        press("gwR");
+        String key = temporalOffset < 0 ? "h" : "l";
+        for (int i = 0; i < Math.abs(temporalOffset); i++)
+            press(key);
+        return new DayEventList(".week-grid > div.selected day-events");
     }
 
     public DayTimeEventList dayTimeEvents(DayOfWeek dayOfWeek) {
@@ -79,6 +98,11 @@ public class WeekView extends DynamicView {
 
     public String selectedDay() {
         return $(".week-grid div.selected > header").text();
+    }
+
+    @Override
+    public void assertNoFilter() {
+        $("span.filter").shouldNotBe(visible);
     }
 
     public void assignDayTaskFromWeekTask(int weekTaskIndex, String dayTaskName, DayOfWeek dayOfWeek) {

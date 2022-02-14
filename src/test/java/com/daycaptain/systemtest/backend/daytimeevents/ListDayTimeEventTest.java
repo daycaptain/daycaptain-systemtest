@@ -51,17 +51,17 @@ public class ListDayTimeEventTest {
         dayCaptain.createDayTimeEventWithArea("New event, another area", LocalDateTime.of(date, LocalTime.of(13, 0)), LocalDateTime.of(date, LocalTime.of(14, 0)), "Business");
 
         assertThat(dayCaptain.getDay(date).timeEvents).hasSize(3);
-        assertThat(dayCaptain.getDay(date, "IT work").timeEvents).extracting(e -> e.string).containsExactly("New event, area");
-        assertThat(dayCaptain.getDay(date, "Business").timeEvents).extracting(e -> e.string).containsExactly("New event, another area");
-        assertThat(dayCaptain.getDay(date, "Self-improvement").timeEvents).isEmpty();
-        assertThat(dayCaptain.getDay(date, "unknown").timeEvents).isEmpty();
+        assertThat(dayCaptain.getDayFilterArea(date, "IT work").timeEvents).extracting(e -> e.string).containsExactly("New event, area");
+        assertThat(dayCaptain.getDayFilterArea(date, "Business").timeEvents).extracting(e -> e.string).containsExactly("New event, another area");
+        assertThat(dayCaptain.getDayFilterArea(date, "Self-improvement").timeEvents).isEmpty();
+        assertThat(dayCaptain.getDayFilterArea(date, "unknown").timeEvents).isEmpty();
 
         YearWeek week = YearWeek.from(date);
         assertThat(dayCaptain.getWeek(week).days.get(date).timeEvents).hasSize(3);
-        assertThat(dayCaptain.getWeek(week, "IT work").days.get(date).timeEvents).extracting(e -> e.string).containsExactly("New event, area");
-        assertThat(dayCaptain.getWeek(week, "Business").days.get(date).timeEvents).extracting(e -> e.string).containsExactly("New event, another area");
-        assertThat(dayCaptain.getWeek(week, "Self-improvement").days.getOrDefault(date, new Day()).timeEvents).isEmpty();
-        assertThat(dayCaptain.getWeek(week, "unknown").days.getOrDefault(date, new Day()).timeEvents).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "IT work").days.get(date).timeEvents).extracting(e -> e.string).containsExactly("New event, area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Business").days.get(date).timeEvents).extracting(e -> e.string).containsExactly("New event, another area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Self-improvement").days.getOrDefault(date, new Day()).timeEvents).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "unknown").days.getOrDefault(date, new Day()).timeEvents).isEmpty();
     }
 
     @AfterEach

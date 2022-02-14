@@ -75,7 +75,8 @@ public class BacklogsView extends DynamicView {
     public void createInboxItemWithArea(String taskName, String areaKey) {
         press("hgglnn");
         press(taskName + Keys.ESCAPE);
-        press("b" + areaKey + Keys.ESCAPE + Keys.ENTER);
+        press("b" + areaKey.toLowerCase() + Keys.ESCAPE);
+        press(Keys.ENTER);
         waitForLoading();
     }
 

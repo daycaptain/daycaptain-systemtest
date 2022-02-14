@@ -42,7 +42,21 @@ public class ListBacklogItemsTest {
         List<BacklogItem> items = dayCaptain.getInbox().items;
         assertThat(items).extracting(b -> b.string).containsSequence("First", "Second", "Third");
 
-        items = dayCaptain.getInbox("IT work").items;
+        items = dayCaptain.getInboxFilterArea("IT work").items;
+        assertThat(items).extracting(b -> b.string).contains("Second");
+        assertThat(items).extracting(b -> b.string).doesNotContain("First", "Third");
+    }
+
+    @Test
+    void testListInboxItemsFilterProject() {
+        dayCaptain.createInboxItem("First");
+        dayCaptain.createInboxItemWithProject("Second", "Business idea");
+        dayCaptain.createInboxItem("Third");
+
+        List<BacklogItem> items = dayCaptain.getInbox().items;
+        assertThat(items).extracting(b -> b.string).containsSequence("First", "Second", "Third");
+
+        items = dayCaptain.getInboxFilterProject("Business idea").items;
         assertThat(items).extracting(b -> b.string).contains("Second");
         assertThat(items).extracting(b -> b.string).doesNotContain("First", "Third");
     }
@@ -53,10 +67,30 @@ public class ListBacklogItemsTest {
 
         dayCaptain.createBacklogItem("First", backlog);
         dayCaptain.createBacklogItemWithArea("Second", backlog, "IT work");
-        dayCaptain.createBacklogItem("Third", backlog);
+        dayCaptain.createBacklogItemWithArea("Third", backlog, "Business");
 
-        List<BacklogItem> items = dayCaptain.getBacklog(backlog._self, "IT work").items;
+        List<BacklogItem> items = dayCaptain.getBacklogFilterArea(backlog._self, "IT work").items;
         assertThat(items).extracting(b -> b.string).containsExactly("Second");
+        items = dayCaptain.getBacklogFilterArea(backlog._self, "Business").items;
+        assertThat(items).extracting(b -> b.string).containsExactly("Third");
+        items = dayCaptain.getBacklogFilterArea(backlog._self, "unknown").items;
+        assertThat(items).extracting(b -> b.string).isEmpty();
+    }
+
+    @Test
+    void testListBacklogItemsFilterProject() {
+        Backlog backlog = dayCaptain.getBacklog(dayCaptain.createBacklog("Test"));
+
+        dayCaptain.createBacklogItem("First", backlog);
+        dayCaptain.createBacklogItemWithProject("Second", backlog, "Business idea");
+        dayCaptain.createBacklogItemWithProject("Third", backlog, "Spanish");
+
+        List<BacklogItem> items = dayCaptain.getBacklogFilterProject(backlog._self, "Business idea").items;
+        assertThat(items).extracting(b -> b.string).containsExactly("Second");
+        items = dayCaptain.getBacklogFilterProject(backlog._self, "Spanish").items;
+        assertThat(items).extracting(b -> b.string).containsExactly("Third");
+        items = dayCaptain.getBacklogFilterProject(backlog._self, "unknown").items;
+        assertThat(items).extracting(b -> b.string).isEmpty();
     }
 
     @Test

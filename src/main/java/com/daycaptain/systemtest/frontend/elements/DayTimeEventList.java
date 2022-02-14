@@ -116,7 +116,7 @@ public class DayTimeEventList extends ListElement {
     }
 
     public List<String> getNames() {
-        return $$(selector()).texts();
+        return $$(selector() + " name").texts();
     }
 
     public ListItem focused() {

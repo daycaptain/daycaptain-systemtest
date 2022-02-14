@@ -6,8 +6,7 @@ import com.daycaptain.systemtest.frontend.elements.TaskList;
 import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.CollectionCondition.anyMatch;
-import static com.codeborne.selenide.Condition.cssClass;
-import static com.codeborne.selenide.Condition.focused;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class DayView extends DynamicView {

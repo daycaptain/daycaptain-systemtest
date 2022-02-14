@@ -115,17 +115,45 @@ public class RetrieveDayTaskTest {
         dayCaptain.createDayTaskWithArea("New task, another area", date, "Business");
 
         assertThat(dayCaptain.getDay(date).tasks).hasSize(3);
-        assertThat(dayCaptain.getDay(date, "IT work").tasks).extracting(e -> e.string).containsExactly("New task, area");
-        assertThat(dayCaptain.getDay(date, "Business").tasks).extracting(e -> e.string).containsExactly("New task, another area");
-        assertThat(dayCaptain.getDay(date, "Self-improvement").tasks).isEmpty();
-        assertThat(dayCaptain.getDay(date, "unknown").tasks).isEmpty();
+        assertThat(dayCaptain.getDayFilterArea(date, "IT work").tasks).extracting(e -> e.string).containsExactly("New task, area");
+        assertThat(dayCaptain.getDayFilterArea(date, "Business").tasks).extracting(e -> e.string).containsExactly("New task, another area");
+        assertThat(dayCaptain.getDayFilterArea(date, "Self-improvement").tasks).isEmpty();
+        assertThat(dayCaptain.getDayFilterArea(date, "unknown").tasks).isEmpty();
 
         YearWeek week = YearWeek.from(date);
         assertThat(dayCaptain.getWeek(week).days.get(date).tasks).hasSize(3);
-        assertThat(dayCaptain.getWeek(week, "IT work").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, area");
-        assertThat(dayCaptain.getWeek(week, "Business").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, another area");
-        assertThat(dayCaptain.getWeek(week, "Self-improvement").days.getOrDefault(date, new Day()).tasks).isEmpty();
-        assertThat(dayCaptain.getWeek(week, "unknown").days.getOrDefault(date, new Day()).tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "IT work").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Business").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, another area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Self-improvement").days.getOrDefault(date, new Day()).tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "unknown").days.getOrDefault(date, new Day()).tasks).isEmpty();
+    }
+
+    @Test
+    void testGetDayTasksFilterProject() {
+        LocalDate date = LocalDate.of(2020, 9, 29);
+        dates.add(date);
+        dayCaptain.createDayTaskWithArea("New task, area", date, "IT work");
+        dayCaptain.createDayTask("New task", date);
+        dayCaptain.createDayTaskWithProject("New task, project", date, 60, "Business idea");
+
+        assertThat(dayCaptain.getDay(date).tasks).hasSize(3);
+        assertThat(dayCaptain.getDayFilterArea(date, "IT work").tasks).extracting(e -> e.string).containsExactly("New task, area");
+        assertThat(dayCaptain.getDayFilterArea(date, "Business").tasks).extracting(e -> e.string).containsExactly("New task, project");
+        assertThat(dayCaptain.getDayFilterArea(date, "Self-improvement").tasks).isEmpty();
+        assertThat(dayCaptain.getDayFilterArea(date, "unknown").tasks).isEmpty();
+        assertThat(dayCaptain.getDayFilterProject(date, "Business idea").tasks).extracting(e -> e.string).containsExactly("New task, project");
+        assertThat(dayCaptain.getDayFilterProject(date, "Spanish").tasks).extracting(e -> e.string).isEmpty();
+        assertThat(dayCaptain.getDayFilterProject(date, "unknown").tasks).isEmpty();
+
+        YearWeek week = YearWeek.from(date);
+        assertThat(dayCaptain.getWeek(week).days.get(date).tasks).hasSize(3);
+        assertThat(dayCaptain.getWeekFilterArea(week, "IT work").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, area");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Business").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, project");
+        assertThat(dayCaptain.getWeekFilterArea(week, "Self-improvement").days.getOrDefault(date, new Day()).tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterArea(week, "unknown").days.getOrDefault(date, new Day()).tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterProject(week, "Business idea").days.get(date).tasks).extracting(e -> e.string).containsExactly("New task, project");
+        assertThat(dayCaptain.getWeekFilterProject(week, "Spanish").days.getOrDefault(date, new Day()).tasks).isEmpty();
+        assertThat(dayCaptain.getWeekFilterProject(week, "unknown").days.getOrDefault(date, new Day()).tasks).isEmpty();
     }
 
     @AfterEach
