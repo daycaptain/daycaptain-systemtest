@@ -18,5 +18,6 @@ public class BacklogItem {
     public Set<URI> assignedTasks = new HashSet<>();
     public URI _self;
     public URI backlog;
+    public String backlogName; // only used for fullInformation search
 
 }

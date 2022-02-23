@@ -812,7 +812,7 @@ public class DayCaptainSystem {
 
     public void deleteProjects(String... names) {
         Set<String> strings = Set.of(names);
-        Stream.concat(getProjects(false).stream(), getProjects(true).stream())
+        getProjects(true).stream()
                 .filter(p -> strings.contains(p.string))
                 .forEach(this::deleteProject);
     }
@@ -955,7 +955,29 @@ public class DayCaptainSystem {
                 .add("query", query)
                 .build();
 
-        return requestSearchVerify(search);
+        return requestSearchVerify(search, false);
+    }
+
+    public SearchResult searchAdvanced(String query, String area, String project) {
+        JsonObjectBuilder builder = Json.createObjectBuilder().add("query", query);
+        if (project != null)
+            builder.add("project", project);
+        else if (area != null)
+            builder.add("area", area);
+        return requestSearchVerify(builder.build(), true);
+    }
+
+    public SearchResult searchAdvanced(String query, String area, String project, LocalDate fromDate, LocalDate toDate) {
+        JsonObjectBuilder builder = Json.createObjectBuilder().add("query", query);
+        if (project != null)
+            builder.add("project", project);
+        else if (area != null)
+            builder.add("area", area);
+        if (fromDate != null)
+            builder.add("from", fromDate.toString());
+        if (toDate != null)
+            builder.add("to", toDate.toString());
+        return requestSearchVerify(builder.build(), true);
     }
 
     public SearchResult searchPotentialRelations(URI uri, String query) {
@@ -964,12 +986,14 @@ public class DayCaptainSystem {
                 .add("relation", uri.toString())
                 .build();
 
-        return requestSearchVerify(search);
+        return requestSearchVerify(search, false);
     }
 
-    private SearchResult requestSearchVerify(JsonObject search) {
-        Response response = rootTarget.path("searches")
-                .request(MediaType.APPLICATION_JSON_TYPE)
+    private SearchResult requestSearchVerify(JsonObject search, boolean fullInformation) {
+        WebTarget target = rootTarget.path("searches");
+        if (fullInformation)
+            target = target.queryParam("showFullInformation", "true");
+        Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json(search));
 
         verifySuccess(response);

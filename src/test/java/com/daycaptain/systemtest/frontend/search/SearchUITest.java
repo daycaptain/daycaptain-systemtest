@@ -6,6 +6,7 @@ import com.daycaptain.systemtest.frontend.actions.SearchAction;
 import com.daycaptain.systemtest.frontend.entity.ListItem;
 import com.daycaptain.systemtest.frontend.entity.Task;
 import com.daycaptain.systemtest.frontend.views.DayView;
+import com.daycaptain.systemtest.frontend.views.ProjectView;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -56,10 +57,14 @@ public class SearchUITest {
         throw new UnsupportedOperationException();
     }
 
-    @Disabled
     @Test
     void day_view_search_jump_to_project() {
-        throw new UnsupportedOperationException();
+        SearchAction search = dayCaptain.day().search();
+        search.searchTerm("Projectt 1");
+        assertThat(search.getResults()).containsExactly("Projectt 1");
+        search.gotoSelection();
+        ListItem project = new ProjectView().focusedProjects().focused();
+        assertThat(project.string).isEqualTo("Projectt 1");
     }
 
     @Disabled
