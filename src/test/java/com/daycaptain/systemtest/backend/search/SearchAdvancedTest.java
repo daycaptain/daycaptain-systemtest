@@ -166,6 +166,42 @@ public class SearchAdvancedTest {
         assertThat(result.weekTasks).extracting("string").containsExactly("Week taskk 3");
     }
 
+    @Test
+    void search_regex() {
+        SearchResult result = dayCaptain.searchAdvancedRegex("Taskk test", null, null);
+        assertThat(result.dayTasks).extracting("string").isEmpty();
+        assertThat(result.timeEvents).extracting("string").isEmpty();
+        assertThat(result.weekTasks).extracting("string").isEmpty();
+        assertThat(result.backlogItems).extracting("string").containsExactly("Taskk test");
+    }
+
+    @Test
+    void search_regex_char_range() {
+        SearchResult result = dayCaptain.searchAdvancedRegex("Taskk [a-z]{4}", null, null);
+        assertThat(result.dayTasks).extracting("string").isEmpty();
+        assertThat(result.timeEvents).extracting("string").isEmpty();
+        assertThat(result.weekTasks).extracting("string").isEmpty();
+        assertThat(result.backlogItems).extracting("string").containsExactly("Taskk test");
+    }
+
+    @Test
+    void search_regex_wildcard() {
+        SearchResult result = dayCaptain.searchAdvancedRegex("Taskk .*", null, null);
+        assertThat(result.dayTasks).extracting("string").isEmpty();
+        assertThat(result.timeEvents).extracting("string").isEmpty();
+        assertThat(result.weekTasks).extracting("string").isEmpty();
+        assertThat(result.backlogItems).extracting("string").containsExactly("Taskk test", "Taskk test with IT area", "Taskk test with Business area", "Taskk test with Business project", "Taskk test with Spanish project", "Taskk in backlog", "Taskk in backlog with IT area");
+    }
+
+    @Test
+    void search_regex_illegal_chars() {
+        SearchResult result = dayCaptain.searchAdvancedRegex("Taskk$$", null, null);
+        assertThat(result.dayTasks).extracting("string").isEmpty();
+        assertThat(result.timeEvents).extracting("string").isEmpty();
+        assertThat(result.weekTasks).extracting("string").isEmpty();
+        assertThat(result.backlogItems).extracting("string").isEmpty();
+    }
+
     @BeforeAll
     static void setUp() {
         dayCaptain.createInboxItem("Taskk test");

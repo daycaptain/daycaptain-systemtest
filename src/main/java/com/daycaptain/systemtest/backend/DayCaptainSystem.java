@@ -5,8 +5,10 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.threeten.extra.YearWeek;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.stream.JsonCollectors;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -88,6 +90,31 @@ public class DayCaptainSystem {
         URI uri = UriBuilder.fromUri(project._self).path("migrations").build();
         Response response = client.target(uri).request()
                 .post(Entity.json(null));
+        verifySuccess(response);
+    }
+
+    public void migrateItemsToProject(Set<URI> uris, String project) {
+        requestMigrationVerify(Json.createObjectBuilder()
+                .add("project", project)
+                .add("items", toArray(uris))
+                .build());
+    }
+
+    public void migrateItemsToArea(Set<URI> uris, String area) {
+        requestMigrationVerify(Json.createObjectBuilder()
+                .add("area", area)
+                .add("items", toArray(uris))
+                .build());
+    }
+
+    private JsonArray toArray(Set<URI> uris) {
+        return uris.stream().map(uri -> Json.createValue(uri.toString())).collect(JsonCollectors.toJsonArray());
+    }
+
+    private void requestMigrationVerify(JsonObject json) {
+        Response response = rootTarget.path("migrations")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(Entity.json(json));
         verifySuccess(response);
     }
 
@@ -977,6 +1004,15 @@ public class DayCaptainSystem {
             builder.add("from", fromDate.toString());
         if (toDate != null)
             builder.add("to", toDate.toString());
+        return requestSearchVerify(builder.build(), true);
+    }
+
+    public SearchResult searchAdvancedRegex(String regex, String area, String project) {
+        JsonObjectBuilder builder = Json.createObjectBuilder().add("regex", regex);
+        if (project != null)
+            builder.add("project", project);
+        else if (area != null)
+            builder.add("area", area);
         return requestSearchVerify(builder.build(), true);
     }
 
