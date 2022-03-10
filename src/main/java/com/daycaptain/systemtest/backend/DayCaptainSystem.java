@@ -107,6 +107,13 @@ public class DayCaptainSystem {
                 .build());
     }
 
+    public void migrateItemsRemoveAreaProject(Set<URI> uris) {
+        requestMigrationVerify(Json.createObjectBuilder()
+                .add("removeAreasProjects", true)
+                .add("items", toArray(uris))
+                .build());
+    }
+
     private JsonArray toArray(Set<URI> uris) {
         return uris.stream().map(uri -> Json.createValue(uri.toString())).collect(JsonCollectors.toJsonArray());
     }

@@ -156,6 +156,35 @@ class MigrationTest {
                 });
     }
 
+    @Test
+    void items_migrated_removed_area_or_project() {
+        dayCaptain.migrateItemsRemoveAreaProject(uris);
+
+        Day day = dayCaptain.getDay(date);
+        List<Task> tasks = day.tasks;
+        tasks.forEach(t -> {
+            assertThat(t.area).isNull();
+            assertThat(t.project).isNull();
+            assertThat(t.relatedArea).isNull();
+            assertThat(t.relatedProject).isNull();
+        });
+
+        day.timeEvents.forEach(e -> {
+            assertThat(e.area).isNull();
+            assertThat(e.project).isNull();
+            assertThat(e.relatedArea).isNull();
+            assertThat(e.relatedProject).isNull();
+        });
+
+        tasks = dayCaptain.getWeek(week).tasks;
+        tasks.forEach(t -> {
+            assertThat(t.area).isNull();
+            assertThat(t.project).isNull();
+            assertThat(t.relatedArea).isNull();
+            assertThat(t.relatedProject).isNull();
+        });
+    }
+
     @BeforeEach
     void setUp() {
         uris.add(dayCaptain.createWeekTask("Task", week));
