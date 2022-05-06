@@ -67,7 +67,7 @@ class SsEventUpdateTest {
         dayCaptain.updateProject(dayCaptain.getProject(project), "string", "SsEventUpdateTest updated project");
         verifyUpdateIncrement();
 
-        dayCaptain.addRelation(dayCaptain.getTask(dayTask), dayTimeEvent);
+        dayCaptain.addRelation(dayCaptain.getTask(dayTask)._self, dayTimeEvent);
         verifyUpdateIncrement();
         dayCaptain.migrateProjectToArea(dayCaptain.getProject(project));
         verifyUpdateIncrement();

@@ -46,7 +46,7 @@ public class AssignWeekTaskFromBacklogItemTest {
         Task task = dayCaptain.getTask(taskId);
         assertThat(task.assignedFromBacklogTask).isNull();
 
-        dayCaptain.addRelation(task, item._self);
+        dayCaptain.addRelation(task._self, item._self);
         task = dayCaptain.getTask(taskId);
         assertThat(task.assignedFromBacklogTask).isEqualTo(item._self);
     }

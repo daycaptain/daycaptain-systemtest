@@ -4,6 +4,7 @@ import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.backend.entity.Backlog;
 import com.daycaptain.systemtest.backend.entity.BacklogItem;
 import com.daycaptain.systemtest.backend.entity.Task;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -43,9 +44,39 @@ public class AssignDayTaskFromBacklogItemTest {
         Task task = dayCaptain.getTask(taskId);
         assertThat(task.assignedFromBacklogTask).isNull();
 
-        dayCaptain.addRelation(task, item._self);
+        dayCaptain.addRelation(item._self, task._self);
         task = dayCaptain.getTask(taskId);
         assertThat(task.assignedFromBacklogTask).isEqualTo(item._self);
+    }
+
+    @Test
+    void reassign_task_should_remove_other_link_to_task() {
+        URI firstItem = dayCaptain.createInboxItem("New backlog item");
+        URI secondItem = dayCaptain.createInboxItem("Another backlog item");
+        URI task = dayCaptain.createDayTask("New day task", DATE);
+
+        dayCaptain.addRelation(firstItem, task);
+        assertThat(dayCaptain.getBacklogItem(firstItem).assignedTasks).containsExactly(task);
+        assertThat(dayCaptain.getTask(task).assignedFromBacklogTask).isEqualTo(firstItem);
+
+        dayCaptain.addRelation(secondItem, task);
+        assertThat(dayCaptain.getBacklogItem(secondItem).assignedTasks).containsExactly(task);
+        assertThat(dayCaptain.getBacklogItem(firstItem).assignedTasks).isEmpty();
+        assertThat(dayCaptain.getTask(task).assignedFromBacklogTask).isEqualTo(secondItem);
+    }
+
+    @Test
+    void remove_relation_removes_link_to_task() {
+        URI item = dayCaptain.createInboxItem("New backlog item");
+        URI task = dayCaptain.createDayTask("New day task", DATE);
+
+        dayCaptain.addRelation(item, task);
+        assertThat(dayCaptain.getBacklogItem(item).assignedTasks).containsExactly(task);
+        assertThat(dayCaptain.getTask(task).assignedFromBacklogTask).isEqualTo(item);
+
+        dayCaptain.removeRelation(item, task);
+        assertThat(dayCaptain.getBacklogItem(item).assignedTasks).isEmpty();
+        assertThat(dayCaptain.getTask(task).assignedFromBacklogTask).isNull();
     }
 
     @Test
@@ -154,6 +185,13 @@ public class AssignDayTaskFromBacklogItemTest {
         assertThat(task.relatedArea).isEqualTo("Business");
         assertThat(task.project).isNull();
         assertThat(task.relatedProject).isEqualTo("Business idea");
+    }
+
+    @AfterEach
+    void tearDown() {
+        dayCaptain.deleteDayTasks(DATE);
+        dayCaptain.deleteBacklogItemsInAllBacklogs("New backlog item", "Another backlog item");
+        dayCaptain.deleteBacklogs("New backlog");
     }
 
 }

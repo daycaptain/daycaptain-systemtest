@@ -437,10 +437,18 @@ public class DayCaptainSystem {
         return getActionId(response);
     }
 
-    public String addRelation(Task task, URI other) {
+    public String addRelation(URI self, URI other) {
         JsonObject patch = patch("op", "add", "path", "/relations", "value", other);
+        return requestUpdateJsonPatch(self, patch);
+    }
 
-        Response response = requestUpdate(task._self, patch, MediaType.APPLICATION_JSON_PATCH_JSON_TYPE);
+    public String removeRelation(URI self, URI other) {
+        JsonObject patch = patch("op", "remove", "path", "/relations", "value", other);
+        return requestUpdateJsonPatch(self, patch);
+    }
+
+    private String requestUpdateJsonPatch(URI self, JsonObject patch) {
+        Response response = requestUpdate(self, patch, MediaType.APPLICATION_JSON_PATCH_JSON_TYPE);
         verifySuccess(response);
         return getActionId(response);
     }

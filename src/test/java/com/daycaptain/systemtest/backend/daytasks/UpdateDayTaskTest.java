@@ -3,6 +3,7 @@ package com.daycaptain.systemtest.backend.daytasks;
 
 import com.daycaptain.systemtest.backend.DayCaptainSystem;
 import com.daycaptain.systemtest.backend.entity.Task;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.threeten.extra.YearWeek;
@@ -120,7 +121,7 @@ public class UpdateDayTaskTest {
         URI weekTaskId = dayCaptain.createWeekTask("Week task", YearWeek.from(date));
         assertThat(weekTaskId).isNotNull();
 
-        dayCaptain.addRelation(task, weekTaskId);
+        dayCaptain.addRelation(task._self, weekTaskId);
 
         task = dayCaptain.getTask(task._self);
         assertThat(task._self).isEqualTo(dayTaskId);
@@ -311,6 +312,19 @@ public class UpdateDayTaskTest {
         Task task = findTask(dayCaptain.getDay(DATE).tasks, taskId);
         AssertionError error = Assertions.assertThrows(AssertionError.class, () -> dayCaptain.updateTask(task, "area", "IT work", "project", "Business idea"));
         assertThat(error.getMessage()).isEqualTo("Status was not successful: 400");
+    }
+
+    @AfterEach
+    void tearDown() {
+        dayCaptain.getDay(DATE).tasks
+                .stream().filter(t -> "New task".equals(t.string) || "Very new task".equals(t.string))
+                .forEach(dayCaptain::deleteTask);
+
+        dayCaptain.getWeek(YearWeek.from(DATE)).tasks
+                .stream().filter(t -> "Week task".equals(t.string))
+                .forEach(dayCaptain::deleteTask);
+
+        dayCaptain.deleteDayTasks(LocalDate.of(2020, 4, 8));
     }
 
 }
