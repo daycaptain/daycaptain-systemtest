@@ -60,11 +60,11 @@ public class SearchUITest {
     @Test
     void day_view_search_jump_to_project() {
         SearchAction search = dayCaptain.day().search();
-        search.searchTerm("Projectt 1");
-        assertThat(search.getResults()).containsExactly("Projectt 1");
+        search.searchTerm("Projectt Foo");
+        assertThat(search.getResults()).containsExactly("Projectt Foo");
         search.gotoSelection();
         ListItem project = new ProjectView().focusedProjects().focused();
-        assertThat(project.string).isEqualTo("Projectt 1");
+        assertThat(project.string).isEqualTo("Projectt Foo");
     }
 
     @Disabled
@@ -105,7 +105,7 @@ public class SearchUITest {
         system.createDayEvent("Dayy eventt", date, date.plusDays(1));
         system.createWeekTask("Weekk taskk", week);
         system.createInboxItem("Inboxx itemm");
-        system.createProject("Projectt 1");
+        system.createProject("Projectt Foo");
         dayCaptain.initWithLogin();
     }
 
@@ -116,7 +116,7 @@ public class SearchUITest {
         system.deleteDayEvents(date);
         system.deleteWeekTasks(week);
         system.deleteBacklogItemsInAllBacklogs("Inboxx itemm");
-        system.deleteProjects("Projectt 1");
+        system.deleteProjects("Projectt Foo");
         dayCaptain.close();
     }
 

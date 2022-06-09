@@ -36,7 +36,7 @@ public class SearchAction extends Action {
     }
 
     public List<String> getResults() {
-        return $$("result-list result-item").stream()
+        return $$("result-list result-item name").stream()
                 .map(el -> el.getOwnText().trim())
                 .collect(Collectors.toList());
     }

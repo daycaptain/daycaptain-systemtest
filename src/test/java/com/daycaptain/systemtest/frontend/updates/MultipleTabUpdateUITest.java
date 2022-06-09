@@ -30,7 +30,7 @@ public class MultipleTabUpdateUITest {
 
         // hack to open a new tab
         press(".");
-        SelenideElement a = $("main-navigation ul li a");
+        SelenideElement a = $("main-navigation ul li:last-of-type a");
         a.toWebElement().sendKeys(Keys.chord(Keys.CONTROL, Keys.ENTER));
 
         // will be in backlogs view

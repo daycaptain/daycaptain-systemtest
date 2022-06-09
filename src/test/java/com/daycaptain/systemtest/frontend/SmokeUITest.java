@@ -5,6 +5,10 @@ import com.daycaptain.systemtest.frontend.views.WeekView;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.threeten.extra.YearWeek;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,14 +25,14 @@ public class SmokeUITest {
     void dayView() {
         DayView dayView = dayCaptain.day();
         dayView.tasks().getNames();
-        assertThat(dayCaptain.currentView()).endsWith("/day.html");
+        assertThat(dayCaptain.currentView()).endsWith("/day.html#" + LocalDate.now());
     }
 
     @Test
     void weekView() {
         WeekView weekView = dayCaptain.week();
         weekView.weekTasks().getList();
-        assertThat(dayCaptain.currentView()).endsWith("/week.html");
+        assertThat(dayCaptain.currentView()).endsWith("/week.html#"+ YearWeek.now());
     }
 
     @AfterEach
