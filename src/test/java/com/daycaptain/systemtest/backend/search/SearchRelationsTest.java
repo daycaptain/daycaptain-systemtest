@@ -7,8 +7,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.threeten.extra.YearWeek;
 
+import java.net.URI;
 import java.time.LocalDate;
 
+import static com.daycaptain.systemtest.Times.time;
 import static com.daycaptain.systemtest.backend.CollectionUtils.findBacklogItem;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -100,6 +102,25 @@ class SearchRelationsTest {
         assertThat(result.weekTasks).extracting(t -> t.string).containsExactly("Something", "Plan business rework", "Working on my project", "Rework business idea", "Past idea");
         assertThat(result.projects).extracting(t -> t.string).containsExactly("Business idea", "Spanish", "Work presentations");
         assertThat(result.backlogItems).extracting(t -> t.string).isEmpty();
+    }
+
+    @Test
+    void testSearchDayTimeEventRelationsSimilarNameSortedFirst() {
+        LocalDate date = LocalDate.of(2020, 5, 9);
+        URI eventId = dayCaptain.createDayTimeEvent("business", time(date, 20), time(date, 21));
+        try {
+            SearchResult result = dayCaptain.searchPotentialRelations(eventId, "");
+
+            assertThat(result.dayEvents).isEmpty();
+            Assertions.assertThat(result.timeEvents).isEmpty();
+            assertThat(result.dayTasks).extracting(t -> t.string).containsExactly("Reading");
+            assertThat(result.weekTasks).extracting(t -> t.string).containsExactly("Plan business rework", "Rework business idea", "Something", "Working on my project", "Past idea");
+            assertThat(result.projects).extracting(t -> t.string).containsExactly("Business idea", "Spanish", "Work presentations");
+            assertThat(result.backlogItems).extracting(t -> t.string).isEmpty();
+
+        } finally {
+            dayCaptain.deleteDayTimeEvent(dayCaptain.getDayTimeEvent(eventId));
+        }
     }
 
     @Test
